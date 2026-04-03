@@ -401,7 +401,7 @@
               <button onClick={onHome} className="p-3 bg-white text-orange-500 rounded-2xl shadow-sm border mb-6 w-12 hover:bg-orange-50 active:scale-90 transition-all"><ArrowLeft size={24}/></button>
               <div className="flex-1 flex flex-col lg:flex-row gap-8 overflow-hidden">
                 {/* Left: Preview */}
-                <div className="w-full lg:w-7/12 bg-white rounded-[3rem] border p-8 flex flex-col shadow-sm border-orange-50">
+                <div className="w-full lg:w-2/3 bg-white rounded-[3rem] border p-8 flex flex-col shadow-sm border-orange-50">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-black flex items-center gap-3 text-gray-800 tracking-tight uppercase">
                       <MonitorPlay size={24} className="text-orange-500" /> Preview
@@ -418,37 +418,37 @@
                 </div>
 
                 {/* Right: Download Section */}
-                <div className="w-full lg:w-5/12 bg-white rounded-[3rem] border p-12 flex flex-col items-center justify-center text-center h-full shadow-sm border-orange-50">
-                  <div className="bg-orange-50 p-8 rounded-[3rem] mb-8 text-orange-500 shadow-inner flex items-center justify-center">
-                     <Download size={56} />
+                <div className="w-full lg:w-1/3 bg-white rounded-[3rem] border p-8 flex flex-col items-center justify-center text-center h-full shadow-sm border-orange-50">
+                  <div className="bg-orange-50 p-6 rounded-[2.5rem] mb-6 text-orange-500 shadow-inner flex items-center justify-center">
+                     <Download size={48} />
                   </div>
-                  <h3 className="text-4xl font-black text-gray-900 mb-4 tracking-tighter">Get the Materials</h3>
-                  <p className="text-sm text-gray-400 mb-12 max-w-[280px] font-bold leading-relaxed opacity-70">
+                  <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tighter">Get the Materials</h3>
+                  <p className="text-xs text-gray-400 mb-8 max-w-[260px] font-bold leading-relaxed opacity-70">
                     Take the learning further! Download the full animal collection in your preferred format and start your adventure.
                   </p>
-                  <div className="w-full space-y-4">
+                  <div className="w-full space-y-3">
                     <button 
                       onClick={() => handleDownload('ppt')} 
                       disabled={downloading} 
-                      className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-5 rounded-[1.5rem] font-black text-base flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100"
+                      className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100"
                     >
-                      <MonitorPlay size={20} /> 
+                      <MonitorPlay size={18} /> 
                       Download PPTX
                     </button>
                     <button 
                       onClick={() => handleDownload('pdf')} 
                       disabled={downloading} 
-                      className="w-full bg-rose-500 hover:bg-rose-600 text-white py-5 rounded-[1.5rem] font-black text-base flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-rose-100"
+                      className="w-full bg-rose-500 hover:bg-rose-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-rose-100"
                     >
-                      <FileText size={20} /> 
+                      <FileText size={18} /> 
                       Download PDF
                     </button>
                     <button 
                       onClick={() => handleDownload('flashcards')} 
                       disabled={downloading} 
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-5 rounded-[1.5rem] font-black text-base flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-emerald-100"
+                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-emerald-100"
                     >
-                      <FileImage size={20} /> 
+                      <FileImage size={18} /> 
                       Download Flashcards
                     </button>
                   </div>
