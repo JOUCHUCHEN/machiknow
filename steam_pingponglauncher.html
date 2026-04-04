@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Launcher - STEAM Project</title>
+    
+    <!-- 引入 Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '3rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 自訂 CSS -->
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f8fafc; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        
+        /* 防止圖片被圓角切掉的優化 */
+        .video-container {
+            mask-image: radial-gradient(white, black);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+    </style>
+
+    <!-- Import Maps -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0"
+        }
+    }
+    </script>
+
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50 h-screen overflow-hidden">
+    <!-- React 應用的掛載點 -->
+    <div id="root" class="h-full"></div>
+
+    <!-- 應用程式主體程式碼 -->
+    <script type="text/babel" data-type="module">
+        import React, { useState } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            Lightbulb, Rocket, PlayCircle, Wrench, Cpu, FileDown, Box
+        } from 'lucide-react';
+
+        // --- 共用元件：廣告版位 ---
+        const AdBanner = ({ format = 'horizontal', className = "" }) => (
+          <div className={`relative flex items-center justify-center bg-gray-50 border-2 border-dashed border-gray-200 text-gray-400 rounded-2xl overflow-hidden ${format === 'horizontal' ? 'w-full h-20 my-2' : 'w-full aspect-square max-h-[250px] my-4'} ${className}`}>
+            <span className="absolute top-2 right-3 text-[9px] bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded uppercase tracking-widest font-bold">AD Space</span>
+            <p className="font-bold text-xs opacity-50">{format === 'horizontal' ? '728 x 90' : '300 x 250'}</p>
+          </div>
+        );
+
+        // --- 專案資料設定 ---
+        const projectData = {
+            spm: {
+                id: 'spm',
+                title: "LEGO 9686 SPM: Ping Pong Launcher",
+                subtitle: "Mechanical Engineering Design",
+                imageUrl: "https://i.ibb.co/5xWX3X9y/Ping-Pong-Ball-Machine.png", // SPM 圖片
+                ioLink: "https://raw.githubusercontent.com/JOUCHUCHEN/machiknow/main/steam/pingponglauncher/Ping_Pong_Launcher(spm_version).io", 
+                description: "In this lesson, we will build a powerful mechanical Ping Pong Launcher using the LEGO 9686 set! Students will explore concepts of potential and kinetic energy, lever principles, and gear systems. Through hands-on practice, they will construct a stable framework capable of storing mechanical tension to shoot a ping pong ball with impressive accuracy and distance.",
+                pdfLink: "https://raw.githubusercontent.com/JOUCHUCHEN/machiknow/main/steam/pingponglauncher/Ping_Pong_Launcher(spm_version).pdf", 
+                themeColor: "indigo"
+            },
+            wedo: {
+                id: 'wedo',
+                title: "LEGO WeDo 2.0: Smart Ping Pong Launcher",
+                subtitle: "Robotics & Automation Design",
+                imageUrl: "https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png", // WeDo 圖片替換
+                ioLink: "https://raw.githubusercontent.com/JOUCHUCHEN/machiknow/main/steam/pingponglauncher/Ping_Pong_Launcher(wedo2.0_version).io", // 更新 WeDo io 連結
+                description: "Take your launcher to the next level by making it smart! In this WeDo 2.0 project, students will integrate motors and sensors to create an automated Ping Pong Launcher. We will learn how to write block-based code to trigger the launching mechanism precisely when an object is detected. This seamlessly combines physical engineering with basic programming.",
+                pdfLink: "https://raw.githubusercontent.com/JOUCHUCHEN/machiknow/main/steam/pingponglauncher/Ping_Pong_Launcher(wedo2.0_version).pdf", // 更新 WeDo pdf 連結
+                themeColor: "emerald"
+            }
+        };
+
+        // --- Main App Component ---
+        function App() {
+          const [activeTab, setActiveTab] = useState('spm');
+          const [isAnimating, setIsAnimating] = useState(false);
+
+          const currentData = projectData[activeTab];
+
+          // 處理檔案下載 (解決跨域連結直接變成空白頁面的問題)
+          const handleDownload = async (e, url, filename) => {
+              e.preventDefault(); // 阻止原本 a 標籤的跳轉行為
+              try {
+                  const response = await fetch(url);
+                  const blob = await response.blob();
+                  const blobUrl = window.URL.createObjectURL(blob);
+                  
+                  // 建立隱藏的 a 標籤來觸發下載
+                  const link = document.createElement('a');
+                  link.href = blobUrl;
+                  link.download = filename;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  window.URL.revokeObjectURL(blobUrl);
+              } catch (error) {
+                  console.error('Download failed, falling back to new tab', error);
+                  // 萬一轉換失敗，退回另開視窗模式
+                  window.open(url, '_blank');
+              }
+          };
+
+          // 處理標籤切換動畫
+          const handleTabChange = (tabId) => {
+              if(tabId === activeTab) return;
+              setIsAnimating(true);
+              setTimeout(() => {
+                  setActiveTab(tabId);
+                  setIsAnimating(false);
+              }, 200); // 動畫過渡時間
+          };
+
+          return (
+            <div className="h-full flex flex-col font-sans">
+                {/* 獨立模組標頭 */}
+                <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 px-8 flex items-center justify-between z-20 shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-slate-800 p-1.5 rounded-lg">
+                            <Rocket className="text-white" size={20} />
+                        </div>
+                        <h1 className="text-lg font-black text-slate-800 tracking-tight">STEAM Learning Module</h1>
+                    </div>
+                </header>
+
+              <main className="flex-1 p-6 lg:p-10 max-w-6xl mx-auto w-full flex flex-col overflow-y-auto custom-scroll">
+                
+                {/* 分頁切換器 (Tab Switcher) */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 mb-10 bg-white p-2 rounded-3xl shadow-sm border border-slate-100 w-fit mx-auto">
+                    <button
+                        onClick={() => handleTabChange('spm')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'spm' ? 'bg-indigo-600 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <Wrench size={18} />
+                        Lego SPM Version
+                    </button>
+                    <button
+                        onClick={() => handleTabChange('wedo')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'wedo' ? 'bg-emerald-500 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <Cpu size={18} />
+                        WeDo 2.0 Version
+                    </button>
+                </div>
+
+                <div className={`transition-all duration-300 ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    {/* Header 區塊 */}
+                    <div className="mb-8 text-center sm:text-left">
+                        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                            {currentData.title}
+                        </h2>
+                        <div className="flex items-center justify-center sm:justify-start gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
+                            <PlayCircle size={14} className={activeTab === 'spm' ? "text-indigo-500" : "text-emerald-500"} />
+                            <span>STEAM Project Learning</span>
+                            <span className="text-slate-200 mx-1">•</span>
+                            <span className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}>{currentData.subtitle}</span>
+                        </div>
+                    </div>
+
+                    {/* 資訊區域 (Project Overview) */}
+                    <div className="mb-10 w-full">
+                      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                         {/* 裝飾背景 */}
+                         <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
+                            <Lightbulb size={100} className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} />
+                         </div>
+                         
+                         <h3 className={`font-black text-xl mb-4 flex items-center gap-3 tracking-tight ${activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}`}>
+                           <span className={`p-2 rounded-xl ${activeTab === 'spm' ? "bg-indigo-50" : "bg-emerald-50"}`}>
+                               <Lightbulb className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} size={20} />
+                           </span>
+                           Project Overview
+                         </h3>
+                         <p className="text-slate-600 leading-relaxed text-base font-medium relative z-10">
+                           {currentData.description}
+                         </p>
+                      </div>
+                    </div>
+
+                    {/* Image Frame */}
+                    <div className="w-full max-w-5xl mx-auto relative group">
+                        {/* 背景裝飾陰影 - 依據版本切換顏色 */}
+                        <div className={`absolute -inset-1 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition duration-1000 ${activeTab === 'spm' ? 'bg-gradient-to-r from-indigo-500 to-rose-500' : 'bg-gradient-to-r from-emerald-400 to-cyan-500'}`}></div>
+                        
+                        <div className="relative bg-white p-3 md:p-4 rounded-[3.5rem] shadow-2xl border border-slate-100">
+                            <div className="aspect-[4/3] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden relative shadow-inner video-container">
+                                <img 
+                                    src={currentData.imageUrl} 
+                                    alt={currentData.title}
+                                    className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 按鈕區塊 (PDF & IO 檔案下載) */}
+                    <div className="mt-10 mb-20 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        {/* 按鈕 1: Download Instruction PDF (左側) */}
+                        <a 
+                            href={currentData.pdfLink} 
+                            onClick={(e) => handleDownload(e, currentData.pdfLink, `Ping_Pong_Launcher_${activeTab}.pdf`)}
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 text-base font-bold text-slate-700 px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 hover:text-slate-900 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
+                        >
+                            <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
+                            Download Instruction (PDF)
+                        </a>
+
+                        {/* 按鈕 2: Download Instruction io file (右側) */}
+                        <a 
+                            href={currentData.ioLink} 
+                            onClick={(e) => handleDownload(e, currentData.ioLink, `Ping_Pong_Launcher_${activeTab}.io`)}
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 text-base font-bold text-white px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 rounded-full shadow-[0_10px_40px_-10px_rgba(244,63,94,0.4)] transition-all hover:scale-105 active:scale-95 group"
+                        >
+                            <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
+                            Download Instruction (io)
+                        </a>
+                    </div>
+
+                    {/* Ad Box - 移至最下方 */}
+                    <div className="mt-6 mb-20 w-full max-w-3xl mx-auto flex flex-col">
+                       <AdBanner format="horizontal" className="!my-0 w-full h-24 border-slate-200" />
+                    </div>
+
+                </div>
+              </main>
+            </div>
+          );
+        }
+
+        // Render the App
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
