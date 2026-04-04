@@ -134,14 +134,14 @@
               }
           };
 
-          // 處理導覽列行為：跳轉回首頁對應區塊
+          // 修正後的導覽列行為：跳轉回根目錄並帶上錨點
           const handleNavAction = (targetId) => {
-            const homeUrl = 'https://jouchuchen.github.io/machiknow/index.html';
+            const baseUrl = 'https://jouchuchen.github.io/machiknow/';
             if (targetId === 'top') {
-                window.location.href = homeUrl;
+                window.location.href = baseUrl;
             } else {
-                // 跳轉至首頁網址並帶上錨點，觸發滑落效果
-                window.location.href = `${homeUrl}#${targetId}`;
+                // 跳轉至首頁網址並帶上錨點，讓首頁自行處理滑落效果
+                window.location.href = `${baseUrl}#${targetId}`;
             }
             setIsMobileMenuOpen(false);
           };
