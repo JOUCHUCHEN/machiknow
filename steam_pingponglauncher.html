@@ -134,12 +134,11 @@
               }
           };
 
-          // 處理導覽列平滑捲動或跳轉
+          // 處理導覽列行為：跳轉回首頁對應區塊
           const handleNavAction = (targetId) => {
             if (targetId === 'top') {
-                document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+                window.location.href = 'index.html';
             } else {
-                // 假設是在子頁面，點擊選單可能需要跳轉回主頁的對應區塊
                 window.location.href = `index.html#${targetId}`;
             }
             setIsMobileMenuOpen(false);
