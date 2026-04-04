@@ -66,7 +66,7 @@
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
         import { 
-            Lightbulb, Rocket, PlayCircle, Wrench, Cpu, FileDown
+            Lightbulb, Rocket, PlayCircle, Wrench, Cpu, FileDown, Menu, ChevronRight
         } from 'lucide-react';
 
         // --- 共用元件：廣告版位 ---
@@ -109,10 +109,11 @@
         function App() {
           const [activeTab, setActiveTab] = useState('spm');
           const [isAnimating, setIsAnimating] = useState(false);
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
           const currentData = projectData[activeTab];
 
-          // 處理檔案下載 (解決跨域連結直接變成空白頁面的問題)
+          // 處理檔案下載
           const handleDownload = async (e, url, filename) => {
               e.preventDefault(); 
               try {
@@ -133,6 +134,17 @@
               }
           };
 
+          // 處理導覽列平滑捲動或跳轉
+          const handleNavAction = (targetId) => {
+            if (targetId === 'top') {
+                document.getElementById('main-content').scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // 假設是在子頁面，點擊選單可能需要跳轉回主頁的對應區塊
+                window.location.href = `index.html#${targetId}`;
+            }
+            setIsMobileMenuOpen(false);
+          };
+
           // 處理標籤切換動畫
           const handleTabChange = (tabId) => {
               if(tabId === activeTab) return;
@@ -143,138 +155,171 @@
               }, 200); 
           };
 
-          return (
-            <div className="h-full flex flex-col font-sans text-slate-900">
-                {/* 獨立模組標頭 */}
-                <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 px-8 flex items-center justify-between z-20 shrink-0">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-slate-800 p-1.5 rounded-lg">
-                            <Rocket className="text-white" size={20} />
-                        </div>
-                        <h1 className="text-lg font-black text-slate-800 tracking-tight">STEAM Learning Module</h1>
-                    </div>
-                </header>
-
-              <main className="flex-1 p-6 lg:p-10 max-w-6xl mx-auto w-full flex flex-col overflow-y-auto custom-scroll">
-                
-                {/* 分頁切換器 (Tab Switcher) */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 mb-10 bg-white p-2 rounded-3xl shadow-sm border border-slate-100 w-fit mx-auto">
-                    <button
-                        onClick={() => handleTabChange('spm')}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'spm' ? 'bg-indigo-600 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
-                    >
-                        <Wrench size={18} />
-                        Lego SPM Version
-                    </button>
-                    <button
-                        onClick={() => handleTabChange('wedo')}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'wedo' ? 'bg-emerald-500 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
-                    >
-                        <Cpu size={18} />
-                        WeDo 2.0 Version
-                    </button>
+          const Navbar = () => (
+            <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
+              <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+                <div className="flex items-center cursor-pointer group" onClick={() => handleNavAction('top')}>
+                  <img 
+                    src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
+                    alt="MachiKnow Official Logo" 
+                    className="w-12 h-12 mr-3 rounded-xl shadow-sm border border-orange-100 group-hover:scale-110 group-hover:rotate-6 transition-all"
+                  />
+                  <span className="font-black text-3xl text-gray-900 tracking-tighter">
+                    Machi<span className="text-orange-600">Know</span>
+                  </span>
                 </div>
+                <div className="hidden md:flex items-center space-x-12">
+                  <button onClick={() => handleNavAction('top')} className="font-bold text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
+                  <button onClick={() => handleNavAction('elementary')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest transition-colors">Elementary</button>
+                  <button onClick={() => handleNavAction('steam')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest transition-colors">STEAM</button>
+                </div>
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2"><Menu size={28} /></button>
+              </div>
+              
+              {isMobileMenuOpen && (
+                <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b md:hidden flex flex-col p-6 space-y-4 z-40">
+                  <button onClick={() => handleNavAction('top')} className="text-left font-bold text-gray-700">Home</button>
+                  <button onClick={() => handleNavAction('elementary')} className="text-left font-bold text-gray-700">Elementary</button>
+                  <button onClick={() => handleNavAction('steam')} className="text-left font-bold text-gray-700">STEAM</button>
+                </div>
+              )}
+            </nav>
+          );
 
-                <div className={`transition-all duration-300 ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-                    {/* Header 區塊 */}
-                    <div className="mb-8 text-center sm:text-left">
-                        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
-                            {currentData.title}
-                        </h2>
-                        <div className="flex items-center justify-center sm:justify-start gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
-                            <PlayCircle size={14} className={activeTab === 'spm' ? "text-indigo-500" : "text-emerald-500"} />
-                            <span>STEAM Project Learning</span>
-                            <span className="text-slate-200 mx-1">•</span>
-                            <span className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}>{currentData.subtitle}</span>
-                        </div>
+          return (
+            <div className="h-screen flex flex-col font-sans text-slate-900 bg-slate-50 overflow-hidden">
+                <Navbar />
+
+                <main id="main-content" className="flex-1 overflow-y-auto custom-scroll">
+                  <div className="p-6 lg:p-10 max-w-6xl mx-auto w-full flex flex-col">
+                    
+                    {/* 分頁切換器 (Tab Switcher) */}
+                    <div className="flex flex-col sm:flex-row items-center gap-4 mb-10 bg-white p-2 rounded-3xl shadow-sm border border-slate-100 w-fit mx-auto">
+                        <button
+                            onClick={() => handleTabChange('spm')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'spm' ? 'bg-indigo-600 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
+                        >
+                            <Wrench size={18} />
+                            Lego SPM Version
+                        </button>
+                        <button
+                            onClick={() => handleTabChange('wedo')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${activeTab === 'wedo' ? 'bg-emerald-500 text-white shadow-md scale-105' : 'text-slate-500 hover:bg-slate-50'}`}
+                        >
+                            <Cpu size={18} />
+                            WeDo 2.0 Version
+                        </button>
                     </div>
 
-                    {/* 資訊區域 (Project Overview) */}
-                    <div className="mb-10 w-full">
-                      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
-                            <Lightbulb size={100} className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} />
-                         </div>
-                         
-                         <h3 className={`font-black text-xl mb-4 flex items-center gap-3 tracking-tight ${activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}`}>
-                           <span className={`p-2 rounded-xl ${activeTab === 'spm' ? "bg-indigo-50" : "bg-emerald-50"}`}>
-                               <Lightbulb className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} size={20} />
-                           </span>
-                           Project Overview
-                         </h3>
-                         <p className="text-slate-600 leading-relaxed text-base font-medium relative z-10">
-                           {currentData.description}
-                         </p>
-                      </div>
-                    </div>
-
-                    {/* Image Frame */}
-                    <div className="w-full max-w-5xl mx-auto relative group">
-                        <div className={`absolute -inset-1 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition duration-1000 ${activeTab === 'spm' ? 'bg-gradient-to-r from-indigo-500 to-rose-500' : 'bg-gradient-to-r from-emerald-400 to-cyan-500'}`}></div>
-                        
-                        <div className="relative bg-white p-3 md:p-4 rounded-[3.5rem] shadow-2xl border border-slate-100">
-                            <div className="aspect-[4/3] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden relative shadow-inner video-container">
-                                <img 
-                                    src={currentData.imageUrl} 
-                                    alt={currentData.title}
-                                    className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                                />
+                    <div className={`transition-all duration-300 ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                        {/* Header 區塊 */}
+                        <div className="mb-8 text-center sm:text-left">
+                            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                                {currentData.title}
+                            </h2>
+                            <div className="flex items-center justify-center sm:justify-start gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
+                                <PlayCircle size={14} className={activeTab === 'spm' ? "text-indigo-500" : "text-emerald-500"} />
+                                <span>STEAM Project Learning</span>
+                                <span className="text-slate-200 mx-1">•</span>
+                                <span className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}>{currentData.subtitle}</span>
                             </div>
                         </div>
-                    </div>
 
-                    {/* 下載按鈕區域 */}
-                    <div className="mt-12 mb-20 flex flex-col items-center gap-6">
-                        {/* 第一排: Instructions (PDF & io) */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                            <a 
-                                href={currentData.pdfLink} 
-                                onClick={(e) => handleDownload(e, currentData.pdfLink, `Instruction_${activeTab}.pdf`)}
-                                className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-700 px-6 bg-white border-2 border-slate-200 hover:border-slate-300 hover:text-slate-900 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
-                            >
-                                <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
-                                Download Instruction (PDF)
-                            </a>
-
-                            <a 
-                                href={currentData.ioLink} 
-                                onClick={(e) => handleDownload(e, currentData.ioLink, `Instruction_${activeTab}.io`)}
-                                className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-white px-6 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 rounded-full shadow-[0_10px_40px_-10px_rgba(244,63,94,0.4)] transition-all hover:scale-105 active:scale-95 group"
-                            >
-                                <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
-                                Download Instruction (io)
-                            </a>
+                        {/* 資訊區域 (Project Overview) */}
+                        <div className="mb-10 w-full">
+                          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                             <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
+                                <Lightbulb size={100} className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} />
+                             </div>
+                             
+                             <h3 className={`font-black text-xl mb-4 flex items-center gap-3 tracking-tight ${activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"}`}>
+                               <span className={`p-2 rounded-xl ${activeTab === 'spm' ? "bg-indigo-50" : "bg-emerald-50"}`}>
+                                   <Lightbulb className={activeTab === 'spm' ? "text-indigo-600" : "text-emerald-600"} size={20} />
+                               </span>
+                               Project Overview
+                             </h3>
+                             <p className="text-slate-600 leading-relaxed text-base font-medium relative z-10">
+                               {currentData.description}
+                             </p>
+                          </div>
                         </div>
 
-                        {/* 第二排: Lesson Plans (English & Chinese) */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                            <a 
-                                href={currentData.lessonPlanEn} 
-                                onClick={(e) => handleDownload(e, currentData.lessonPlanEn, `LessonPlan_EN_${activeTab}.pdf`)}
-                                className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-600 px-6 bg-slate-50 border-2 border-slate-200 hover:border-slate-300 hover:text-slate-800 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
-                            >
-                                <FileDown size={22} className="text-blue-500 group-hover:-translate-y-1 transition-transform" /> 
-                                Lesson Plan (English)
-                            </a>
+                        {/* Image Frame */}
+                        <div className="w-full max-w-5xl mx-auto relative group">
+                            <div className={`absolute -inset-1 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition duration-1000 ${activeTab === 'spm' ? 'bg-gradient-to-r from-indigo-500 to-rose-500' : 'bg-gradient-to-r from-emerald-400 to-cyan-500'}`}></div>
+                            
+                            <div className="relative bg-white p-3 md:p-4 rounded-[3.5rem] shadow-2xl border border-slate-100">
+                                <div className="aspect-[4/3] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden relative shadow-inner video-container">
+                                    <img 
+                                        src={currentData.imageUrl} 
+                                        alt={currentData.title}
+                                        className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-                            <a 
-                                href={currentData.lessonPlanCh} 
-                                onClick={(e) => handleDownload(e, currentData.lessonPlanCh, `LessonPlan_CH_${activeTab}.pdf`)}
-                                className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-600 px-6 bg-slate-50 border-2 border-slate-200 hover:border-slate-300 hover:text-slate-800 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
-                            >
-                                <FileDown size={22} className="text-red-500 group-hover:-translate-y-1 transition-transform" /> 
-                                Lesson Plan (Chinese)
-                            </a>
+                        {/* 下載按鈕區域 */}
+                        <div className="mt-12 mb-20 flex flex-col items-center gap-6">
+                            {/* 第一排: Instructions (PDF & io) */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                                <a 
+                                    href={currentData.pdfLink} 
+                                    onClick={(e) => handleDownload(e, currentData.pdfLink, `Instruction_${activeTab}.pdf`)}
+                                    className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-700 px-6 bg-white border-2 border-slate-200 hover:border-slate-300 hover:text-slate-900 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
+                                >
+                                    <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
+                                    Download Instruction (PDF)
+                                </a>
+
+                                <a 
+                                    href={currentData.ioLink} 
+                                    onClick={(e) => handleDownload(e, currentData.ioLink, `Instruction_${activeTab}.io`)}
+                                    className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-white px-6 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 rounded-full shadow-[0_10px_40px_-10px_rgba(244,63,94,0.4)] transition-all hover:scale-105 active:scale-95 group"
+                                >
+                                    <FileDown size={22} className="group-hover:-translate-y-1 transition-transform" /> 
+                                    Download Instruction (io)
+                                </a>
+                            </div>
+
+                            {/* 第二排: Lesson Plans (English & Chinese) */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                                <a 
+                                    href={currentData.lessonPlanEn} 
+                                    onClick={(e) => handleDownload(e, currentData.lessonPlanEn, `LessonPlan_EN_${activeTab}.pdf`)}
+                                    className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-600 px-6 bg-slate-50 border-2 border-slate-200 hover:border-slate-300 hover:text-slate-800 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
+                                >
+                                    <FileDown size={22} className="text-blue-500 group-hover:-translate-y-1 transition-transform" /> 
+                                    Lesson Plan (English)
+                                </a>
+
+                                <a 
+                                    href={currentData.lessonPlanCh} 
+                                    onClick={(e) => handleDownload(e, currentData.lessonPlanCh, `LessonPlan_CH_${activeTab}.pdf`)}
+                                    className="w-full sm:w-80 h-16 flex items-center justify-center gap-3 text-base font-bold text-slate-600 px-6 bg-slate-50 border-2 border-slate-200 hover:border-slate-300 hover:text-slate-800 rounded-full shadow-sm transition-all hover:scale-105 active:scale-95 group"
+                                >
+                                    <FileDown size={22} className="text-red-500 group-hover:-translate-y-1 transition-transform" /> 
+                                    Lesson Plan (Chinese)
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Ad Box */}
+                        <div className="mt-6 mb-20 w-full max-w-3xl mx-auto flex flex-col">
+                           <AdBanner format="horizontal" className="!my-0 w-full h-24 border-slate-200" />
                         </div>
                     </div>
+                  </div>
 
-                    {/* Ad Box */}
-                    <div className="mt-6 mb-20 w-full max-w-3xl mx-auto flex flex-col">
-                       <AdBanner format="horizontal" className="!my-0 w-full h-24 border-slate-200" />
+                  <footer className="bg-gray-900 text-white py-12 text-center shrink-0">
+                    <div className="max-w-7xl mx-auto px-4">
+                      <div className="flex items-center justify-center mb-6 text-2xl font-black tracking-tighter uppercase">
+                        MachiKnow
+                      </div>
+                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MachiKnow. All rights reserved.</div>
                     </div>
-
-                </div>
-              </main>
+                  </footer>
+                </main>
             </div>
           );
         }
