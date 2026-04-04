@@ -97,8 +97,8 @@
 
           const Navbar = () => (
             <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
-              {/* 關鍵修正：寬度改為 max-w-6xl 並與下方 main 的 px-6 lg:px-10 同步 */}
-              <div className="max-w-6xl mx-auto px-6 lg:px-10 h-full flex justify-between items-center">
+              {/* 完全同步範例代碼：max-w-7xl px-4 */}
+              <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                 <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
                   <img 
                     src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
@@ -128,17 +128,17 @@
               <Navbar />
 
               <main className="flex-1 w-full">
-                {/* 內容容器對齊導覽列 */}
-                <div className="py-10 max-w-6xl mx-auto px-6 lg:px-10 w-full flex flex-col">
+                {/* 內容容器同步對齊導覽列：max-w-7xl px-4 */}
+                <div className="py-10 max-w-7xl mx-auto px-4 w-full flex flex-col lg:px-10">
                     
                     {/* Header 區塊 */}
-                    <div className="mb-10 text-left">
+                    <div className="mb-10 text-left px-2">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3">LEGO 9868 SPM: Bow & Arrow</h2>
-                        <div className="flex items-center gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
+                        <div className="flex items-center justify-start gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
                             <PlayCircle size={14} className="text-orange-500" />
                             <span>STEAM Project Learning</span>
                             <span className="text-slate-200 mx-1">•</span>
-                            <span className="text-indigo-600">Creative Engineering Design</span>
+                            <span className="text-indigo-600 font-bold">Creative Engineering Design</span>
                         </div>
                     </div>
 
