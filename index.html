@@ -24,20 +24,13 @@
         }
     </script>
 
-    <!-- 遊戲與 UI 所需的自訂 CSS -->
+    <!-- 自訂 CSS -->
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; }
         .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f8fafc; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } 
-        .no-scrollbar::-webkit-scrollbar { display: none; } 
-        .perspective { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1); } 
-        .backface-hidden { backface-visibility: hidden; } 
-        .rotate-y-180 { transform: rotateY(180deg); }
-        .no-select { user-select: none; -webkit-user-select: none; }
     </style>
 
     <!-- Import Maps: 讓瀏覽器可以直接載入 React 與 Lucide Icons -->
@@ -60,84 +53,11 @@
 
     <!-- 應用程式主體程式碼 -->
     <script type="text/babel" data-type="module">
-        import React, { useState, useEffect, useRef } from 'react';
+        import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { 
-          BookOpen, Rocket, Search, Menu, X, Download, Star, ChevronRight, Globe, 
-          ArrowLeft, PlayCircle, CheckCircle, FileText, FileImage, Volume2, HelpCircle, Layout,
-          Home, Hand, LayoutGrid, Trophy, RotateCcw, Play, MonitorPlay, ChevronLeft, Lock, Mic,
-          FlaskConical, Youtube, Construction, ExternalLink, AlertCircle, Info, Lightbulb
-        } from 'lucide-react';
+        import { Menu, LayoutGrid, Rocket, ChevronRight, Youtube } from 'lucide-react';
 
-        const apiKey = ""; // 系統會自動提供金鑰
-
-        // --- Custom Animal Icon Component ---
-        const AnimalIcon = ({ name, emoji, className = "" }) => {
-          if (name === 'Crow') {
-            return (
-              <img 
-                src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f426-200d-2b1b.svg" 
-                alt="Crow" 
-                className={className}
-                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
-              />
-            );
-          }
-          if (name === 'Seal') {
-            return (
-              <img 
-                src="https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f9ad.svg" 
-                alt="Seal" 
-                className={className}
-                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
-              />
-            );
-          }
-          return <span className={className}>{emoji}</span>;
-        };
-
-        // --- Mock Database ---
-        const elementaryResources = [
-          { id: 1, title: 'Phonics Fun: A to Z', type: 'Worksheet', level: 'Beginner', desc: 'Basic phonics practice sheets, including A to Z letter tracing and flashcards.', downloads: 1240 },
-          { id: 2, title: 'Vocabulary Challenge', type: 'Flashcards', level: 'Beginner', desc: 'Daily vocabulary cards covering food, animals, and clothing topics.', downloads: 890 },
-          { id: 3, title: 'Reading: The Red Hen', type: 'Picture Book', level: 'Intermediate', desc: 'Reading comprehension materials based on the classic story "The Little Red Hen".', downloads: 1560 },
-          { id: 4, title: 'Basic Grammar Guide', type: 'Guide', level: 'Intermediate', desc: 'Fundamental grammar rules, covering present simple and common prepositions.', downloads: 2100 },
-        ];
-
-        const steamResources = [
-          { id: 5, title: 'DIY Volcano Model', type: 'Experiment', focus: 'Science', desc: 'A volcano eruption guide combining science experiments with English instructions.', downloads: 3420 },
-          { id: 6, title: 'Scratch Coding', type: 'Tutorial', focus: 'Tech', desc: 'Introductory Scratch programming for kids using English terminology.', downloads: 2800 },
-          { id: 7, title: 'Bridge Engineering', type: 'Project', focus: 'Engineering', desc: 'Build a bridge using popsicle sticks and learn measurement-related vocabulary.', downloads: 1150 },
-          { id: 8, title: 'Math Logic Puzzles', type: 'Worksheet', focus: 'Math', desc: 'Logic puzzles designed to improve both calculation and English reading skills.', downloads: 1980 },
-        ];
-
-        const animalsData = [
-          { id: 1, name: 'Dog', category: 'Land', emoji: '🐶', tpr: 'Put hands on head like ears, stick tongue out and pant.' },
-          { id: 2, name: 'Horse', category: 'Land', emoji: '🐎', tpr: 'March in place, pretend to ride a horse.' },
-          { id: 3, name: 'Elephant', category: 'Land', emoji: '🐘', tpr: 'Swing one arm in front of your face like a long trunk!' },
-          { id: 4, name: 'Lion', category: 'Land', emoji: '🦁', tpr: 'Open your hands like claws and ROAR!' },
-          { id: 5, name: 'Snake', category: 'Land', emoji: '🐍', tpr: 'Put your arms together, wiggle them, and go Sssss!' },
-          { id: 6, name: 'Human', category: 'Land', emoji: '🧑', tpr: 'Point to yourself, smile, wave, and say Hello!' },
-          { id: 7, name: 'Crow', category: 'Air', emoji: '🐦‍⬛', tpr: 'Tap your hands on your sides and say Caw, caw!' },
-          { id: 8, name: 'Eagle', category: 'Air', emoji: '🦅', tpr: 'Stretch your arms out wide like big wings and glide!' },
-          { id: 9, name: 'Whale', category: 'Water', emoji: '🐳', tpr: 'Put hands together above your head, pretend to spout water!' },
-          { id: 10, name: 'Seal', category: 'Water', emoji: '🦭', tpr: 'Keep your arms close to your body and clap your hands!' }
-        ];
-
-        const speak = (text) => {
-          if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.8;
-            window.speechSynthesis.speak(utterance);
-          }
-        };
-
-        const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
-
-        // --- Component Fragments ---
-
+        // --- 共用元件：廣告版位 ---
         const AdBanner = ({ format = 'horizontal', className = "" }) => (
           <div className={`relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg overflow-hidden ${format === 'horizontal' ? 'w-full h-20 my-2' : 'w-full aspect-square max-h-[250px] my-4'} ${className}`}>
             <span className="absolute top-1 right-2 text-[10px] bg-gray-200 text-gray-500 px-1 rounded uppercase tracking-tighter font-bold">AD Space</span>
@@ -145,845 +65,13 @@
           </div>
         );
 
-        const ResourceCard = ({ item, icon: Icon }) => (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow flex flex-col h-full cursor-pointer group">
-            <div className="flex justify-between items-start mb-2">
-              <div className="bg-orange-50 p-1.5 rounded-lg text-orange-600 group-hover:bg-orange-100 transition-colors">
-                <Icon size={20} />
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 bg-green-50 text-green-600 rounded-full uppercase tracking-wide">{item.level || item.focus}</span>
-            </div>
-            <h3 className="text-sm font-bold text-gray-800 mb-1 group-hover:text-orange-600 transition-colors">{item.title}</h3>
-            <p className="text-[10px] text-gray-600 mb-3 flex-grow line-clamp-2 leading-relaxed">{item.desc}</p>
-            <div className="flex items-center justify-end mt-auto pt-2 border-t border-gray-50">
-              <button className="text-[10px] font-bold text-orange-600 flex items-center hover:translate-x-0.5 transition-transform">Download <ChevronRight size={12} /></button>
-            </div>
-          </div>
-        );
-
-        // --- STEAM Video Page ---
-
-        function SteamVideoPage({ onBack }) {
-          const videoId = "ieDNvJNf0ag";
-          const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-          return (
-            <div className="h-[calc(100vh-80px)] bg-slate-50 overflow-y-auto custom-scroll flex flex-col animate-in fade-in duration-500">
-              <main className="flex-1 p-6 max-w-6xl mx-auto w-full flex flex-col">
-                {/* Header */}
-                <div className="flex items-center gap-5 mb-8">
-                  <button 
-                    onClick={onBack}
-                    className="p-3 bg-white text-orange-600 rounded-2xl shadow-sm border border-orange-100 hover:bg-orange-50 transition-all hover:scale-110 active:scale-95 flex-shrink-0"
-                  >
-                    <ArrowLeft size={24} />
-                  </button>
-                  <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none mb-2">LEGO 9868 SPM: Bow & Arrow</h2>
-                    <p className="text-sm text-gray-400 font-bold tracking-widest uppercase opacity-80">STEAM Project Learning • Creative Engineering Design</p>
-                  </div>
-                </div>
-
-                {/* Video Frame */}
-                <div className="bg-black rounded-[3rem] overflow-hidden shadow-2xl relative group aspect-video mx-auto w-full max-w-5xl border-[12px] border-white">
-                  <iframe 
-                    className="w-full h-full"
-                    src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&showinfo=0&modestbranding=1`} 
-                    title="LEGO 9868 SPM: Bow & Arrow"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-
-                {/* Error State Warning */}
-                <div className="mt-8 flex flex-col items-center gap-3">
-                  <div className="flex items-center gap-2 text-rose-500 text-[11px] font-black uppercase tracking-[0.2em] opacity-80">
-                    <AlertCircle size={14} className="stroke-[3]" /> Playback Error?
-                  </div>
-                  <a 
-                    href={youtubeUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-base font-black text-white px-10 py-4 bg-rose-500 hover:bg-rose-600 rounded-full shadow-2xl shadow-rose-200 transition-all active:scale-95 group"
-                  >
-                    <Youtube size={22} className="group-hover:scale-110 transition-transform" /> 
-                    Open in YouTube Player <ExternalLink size={18} />
-                  </a>
-                </div>
-
-                {/* Info Area */}
-                <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
-                  <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-                     <h3 className="font-black text-xl mb-4 flex items-center gap-3 text-orange-600 uppercase tracking-tighter">
-                       <Lightbulb className="text-orange-400" size={24} /> Project Overview
-                     </h3>
-                     <p className="text-gray-500 leading-loose text-base font-medium">
-                       In this lesson, we will learn how to build a fully functional toy bow and arrow using Lego 9686 set! Through hands-on practice, students will experience basic concepts of physical tension, mechanical principles, and engineering structures, turning creativity into a physical masterpiece.
-                     </p>
-                  </div>
-                  
-                  {/* Replaced Download box with Ad Box */}
-                  <div className="flex items-center justify-center p-2">
-                     <AdBanner format="square" className="!my-0 w-full h-full min-h-[250px] !max-h-none" />
-                  </div>
-                </div>
-              </main>
-            </div>
-          );
-        }
-
-        // --- Amazing Animals Module ---
-
-        function AaHomeView({ setModuleView }) {
-          return (
-            <div className="flex flex-col items-center justify-center text-center animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-full w-full py-12">
-              <div className="flex gap-4 mb-6 animate-bounce justify-center">
-                <span className="text-7xl drop-shadow-xl">🐶</span>
-                <span className="text-7xl drop-shadow-xl">🦁</span>
-                <span className="text-7xl drop-shadow-xl">🐘</span>
-                <span className="text-7xl drop-shadow-xl">🐎</span>
-              </div>
-              <h2 className="text-4xl font-black text-sky-900 mb-2 tracking-tight">Amazing Animals!</h2>
-              <p className="text-base text-sky-700/60 mb-10 max-w-sm font-bold leading-relaxed mx-auto">Meet animal friends, listen, and move your body!</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full max-w-3xl px-6 mb-12">
-                <AaHomeCard icon={<BookOpen className="text-amber-500" />} title="Learn & Move" desc="Vocabulary & TPR Actions" color="bg-amber-50 border-amber-200" onClick={() => setModuleView('learn')} />
-                <AaHomeCard icon={<Hand className="text-rose-500" />} title="Listening Game" desc="Test Your Ears" color="bg-rose-50 border-rose-200" onClick={() => setModuleView('swatter')} />
-                <AaHomeCard icon={<LayoutGrid className="text-emerald-500" />} title="Matching Game" desc="Find the Pairs" color="bg-emerald-50 border-emerald-200" onClick={() => setModuleView('memory')} />
-                <AaHomeCard icon={<Download className="text-purple-500" />} title="Materials" desc="PPT & PDF Download" color="bg-purple-50 border-purple-200" onClick={() => setModuleView('downloads')} />
-              </div>
-
-              {/* Ad Space explicitly added here */}
-              <div className="mt-auto w-full max-w-3xl px-6">
-                <AdBanner format="horizontal" />
-              </div>
-            </div>
-          );
-        }
-
-        function AaHomeCard({ icon, title, desc, color, onClick }) {
-          return (
-            <button onClick={onClick} className={`${color} border-2 rounded-[2rem] p-6 text-left flex items-center gap-5 transition-all hover:scale-[1.03] active:scale-95 group shadow-sm w-full`}>
-              <div className="bg-white p-4 rounded-2xl shadow-sm group-hover:rotate-6 transition-transform">{icon}</div>
-              <div>
-                <h3 className="text-xl font-black text-gray-800 leading-tight"> {title} </h3>
-                <p className="text-[12px] text-gray-500 font-black mt-1 uppercase tracking-wider">{desc}</p>
-              </div>
-            </button>
-          );
-        }
-
-        function AaLearnView({ onHome }) {
-          const categories = [
-            { id: 'Land', label: 'Land', eng: "Let's go to the Land!", icon: "🌳", color: "from-emerald-400 to-green-600" },
-            { id: 'Air', label: 'Air', eng: "Let's fly in the Sky!", icon: "☁️", color: "from-cyan-300 to-blue-400" },
-            { id: 'Water', label: 'Water', eng: "Let's dive into the Sea!", icon: "🌊", color: "from-blue-400 to-indigo-600" },
-          ];
-
-          const [filter, setFilter] = useState('Land');
-          const [intro, setIntro] = useState({ title: categories[0].eng, sub: `${categories[0].label} Animals`, color: categories[0].color, icon: categories[0].icon });
-
-          useEffect(() => { speak(categories[0].eng); }, []);
-
-          const handleFilterChange = (cat) => {
-            if (cat.id === filter) return;
-            setIntro({ title: cat.eng, sub: `${cat.label} Animals`, color: cat.color, icon: cat.icon });
-            speak(cat.eng);
-            setFilter(cat.id);
-          };
-
-          const getSentence = (name) => {
-            if (name === 'Human') return "I am a human.";
-            const lowerName = name.toLowerCase();
-            const isVowel = ['a', 'e', 'i', 'o', 'u'].includes(lowerName[0]);
-            return `It is ${isVowel ? 'an' : 'a'} ${lowerName}.`;
-          };
-
-          return (
-            <div className="h-full flex flex-col relative overflow-hidden animate-in fade-in">
-              {intro && (
-                <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center text-white bg-gradient-to-br ${intro.color} animate-in fade-in zoom-in duration-500`}>
-                  <div className="text-[10rem] mb-10 animate-bounce">{intro.icon}</div>
-                  <h2 className="text-4xl md:text-6xl font-black text-center px-8 mb-8 drop-shadow-2xl uppercase tracking-tighter opacity-95">{intro.title}</h2>
-                  <div className="bg-white/20 backdrop-blur-xl px-16 py-4 rounded-[3rem] border border-white/40 text-[36px] md:text-[58px] font-black mb-12 shadow-2xl tracking-tighter text-center">{intro.sub}</div>
-                  <button 
-                    onClick={() => setIntro(null)} 
-                    className="bg-white text-sky-900 px-12 py-5 rounded-full font-black text-2xl shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center gap-3"
-                  >
-                    Start Learning <ChevronRight size={28} />
-                  </button>
-                </div>
-              )}
-
-              {/* Filter Nav */}
-              <div className="flex items-center justify-between mb-8 bg-white p-3 rounded-3xl shadow-sm border border-sky-100">
-                <button onClick={onHome} className="p-3 text-sky-500 hover:bg-sky-50 rounded-2xl transition-all shadow-sm active:scale-90"><ArrowLeft size={28} /></button>
-                <div className="flex gap-3">
-                  {categories.map(cat => (
-                    <button 
-                      key={cat.id} 
-                      onClick={() => handleFilterChange(cat)} 
-                      className={`px-8 py-3 rounded-full text-base font-black transition-all ${filter === cat.id ? 'bg-sky-500 text-white shadow-lg scale-105' : 'bg-white text-sky-600 hover:bg-sky-50 border border-sky-100'}`}
-                    >
-                      {cat.icon} {cat.label}
-                    </button>
-                  ))}
-                </div>
-                <div className="w-12"></div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto pb-12 custom-scroll">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
-                  {animalsData.filter(a => a.category === filter).map(animal => {
-                    const sentenceText = getSentence(animal.name);
-                    return (
-                      <div key={animal.id} className="bg-white rounded-[3rem] p-10 shadow-lg border border-sky-50 flex flex-col items-center text-center transition-all hover:shadow-2xl hover:-translate-y-2 group relative">
-                        <div className="w-40 h-40 mb-6 cursor-pointer group-hover:scale-110 transition-transform active:scale-95 flex items-center justify-center" onClick={() => speak(animal.name)}>
-                          <AnimalIcon name={animal.name} emoji={animal.emoji} className="text-9xl drop-shadow-2xl w-full h-full object-contain" />
-                        </div>
-                        
-                        <h3 className="text-4xl font-black text-gray-800 mb-6 tracking-tighter">{animal.name}</h3>
-                        
-                        {/* Sentence Display */}
-                        <div className="mb-6 min-h-8 flex items-center justify-center">
-                          <p className="text-xl font-black text-sky-600 italic tracking-tight opacity-90">"{sentenceText}"</p>
-                        </div>
-
-                        {/* TPR Action Box */}
-                        <div className="bg-sky-50/70 p-6 rounded-[2rem] w-full mb-8 border border-sky-100/50 relative">
-                          <p className="text-[11px] uppercase tracking-[0.3em] font-black text-sky-400 mb-3 text-center flex items-center justify-center gap-2">
-                            🏃 TPR ACTION
-                          </p>
-                          <p className="text-base text-sky-800 font-bold italic text-center leading-relaxed">
-                            "{animal.tpr}"
-                          </p>
-                        </div>
-                        
-                        {/* Action Buttons */}
-                        <div className="flex gap-4 w-full mt-auto">
-                          <button onClick={() => speak(animal.name)} className="flex-1 bg-amber-400 hover:bg-amber-500 text-white py-5 rounded-[1.5rem] font-black transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3 shadow-amber-100"><Volume2 size={24}/>Word</button>
-                          <button onClick={() => speak(sentenceText)} className="flex-1 bg-sky-500 hover:bg-sky-600 text-white py-5 rounded-[1.5rem] font-black transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3 shadow-sky-100"><Play size={24}/>Sentence</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        // --- Downloads View ---
-
-        function AaDownloadsView({ onHome }) {
-          const [downloading, setDownloading] = useState(null);
-          const [slideIndex, setSlideIndex] = useState(0);
-          const slideUrls = ["https://i.ibb.co/YFGTvyp2/1.png", "https://i.ibb.co/3myx4BBH/2.png", "https://i.ibb.co/HDm9jRm4/3.png", "https://i.ibb.co/nMQmTqbN/4.png", "https://i.ibb.co/1YNMxSfK/5.png", "https://i.ibb.co/j9Lk6HtL/6.png", "https://i.ibb.co/2Yj2vV40/7.png", "https://i.ibb.co/1Gpk35C0/8.png", "https://i.ibb.co/WwL1KwF/9.png", "https://i.ibb.co/nsCm7Cdq/10.png", "https://i.ibb.co/JFj24v2w/11.png", "https://i.ibb.co/1GSXjsDh/12.png", "https://i.ibb.co/prPkxYsd/13.png", "https://i.ibb.co/S703kGRp/14.png", "https://i.ibb.co/Vc1VDSpJ/15.png"];
-          
-          const handleDownload = (type) => {
-            setDownloading(type);
-            let url = "";
-            if (type === 'pdf') {
-              url = "https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/animals/Animal_Field_Guide.pdf";
-            } else if (type === 'ppt') {
-              url = "https://github.com/JOUCHUCHEN/CurioCat/blob/main/animals/Animal_Field_Guide.pptx?raw=true";
-            } else if (type === 'flashcards') {
-              url = "https://github.com/JOUCHUCHEN/CurioCat/blob/main/animals/Flashcards.zip?raw=true";
-            }
-            window.open(url, '_blank');
-            setTimeout(() => setDownloading(null), 2000);
-          };
-
-          return (
-            <div className="flex flex-col h-full animate-in fade-in">
-              <button onClick={onHome} className="p-3 bg-white text-orange-500 rounded-2xl shadow-sm border mb-6 w-12 hover:bg-orange-50 active:scale-90 transition-all"><ArrowLeft size={24}/></button>
-              <div className="flex-1 flex flex-col lg:flex-row gap-8 overflow-hidden">
-                {/* Left: Preview */}
-                <div className="w-full lg:w-2/3 bg-white rounded-[3rem] border p-8 flex flex-col shadow-sm border-orange-50">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-black flex items-center gap-3 text-gray-800 tracking-tight uppercase">
-                      <MonitorPlay size={24} className="text-orange-500" /> Preview
-                    </h3>
-                    <span className="text-[11px] bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full font-black uppercase tracking-widest">
-                      Slide {slideIndex + 1} / {slideUrls.length}
-                    </span>
-                  </div>
-                  <div className="flex-1 bg-gray-950 rounded-[2.5rem] overflow-hidden relative flex items-center justify-center border border-gray-900 shadow-2xl">
-                    <img src={slideUrls[slideIndex]} className="h-full w-full object-contain" alt={`Slide ${slideIndex + 1}`} />
-                    <button onClick={() => setSlideIndex((prev) => (prev - 1 + slideUrls.length) % slideUrls.length)} className="absolute left-6 bg-black/40 hover:bg-white p-4 rounded-full text-white hover:text-orange-600 active:scale-90 transition-all backdrop-blur-md"><ChevronLeft size={32} /></button>
-                    <button onClick={() => setSlideIndex((prev) => (prev + 1) % slideUrls.length)} className="absolute right-6 bg-black/40 hover:bg-white p-4 rounded-full text-white hover:text-orange-600 active:scale-90 transition-all backdrop-blur-md"><ChevronRight size={32} /></button>
-                  </div>
-                </div>
-
-                {/* Right: Download Section */}
-                <div className="w-full lg:w-1/3 bg-white rounded-[3rem] border p-8 flex flex-col items-center justify-center text-center h-full shadow-sm border-orange-50">
-                  <div className="bg-orange-50 p-6 rounded-[2.5rem] mb-6 text-orange-500 shadow-inner flex items-center justify-center">
-                     <Download size={48} />
-                  </div>
-                  <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tighter">Get the Materials</h3>
-                  <p className="text-xs text-gray-400 mb-8 max-w-[260px] font-bold leading-relaxed opacity-70">
-                    Take the learning further! Download the full animal collection in your preferred format and start your adventure.
-                  </p>
-                  <div className="w-full space-y-3">
-                    <button 
-                      onClick={() => handleDownload('ppt')} 
-                      disabled={downloading} 
-                      className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100"
-                    >
-                      <MonitorPlay size={18} /> 
-                      Download PPTX
-                    </button>
-                    <button 
-                      onClick={() => handleDownload('pdf')} 
-                      disabled={downloading} 
-                      className="w-full bg-rose-500 hover:bg-rose-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-rose-100"
-                    >
-                      <FileText size={18} /> 
-                      Download PDF
-                    </button>
-                    <button 
-                      onClick={() => handleDownload('flashcards')} 
-                      disabled={downloading} 
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-[1.25rem] font-black text-sm flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 transition-all shadow-xl shadow-emerald-100"
-                    >
-                      <FileImage size={18} /> 
-                      Download Flashcards
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Explicit Ad Banner for Downloads view bottom */}
-              <AdBanner />
-            </div>
-          );
-        }
-
-        // --- Game Logic: Swatter ---
-        function AaSwatterGameView({ onHome }) {
-          const [target, setTarget] = useState(null);
-          const [options, setOptions] = useState([]);
-          const [score, setScore] = useState(0);
-          const [feedback, setFeedback] = useState(null); 
-          const [timeLeft, setTimeLeft] = useState(60);
-          const [gameOver, setGameOver] = useState(false);
-
-          const playDingDong = () => {
-            try {
-              const AudioContext = window.AudioContext || window.webkitAudioContext;
-              const ctx = new AudioContext();
-              const osc1 = ctx.createOscillator();
-              const gain1 = ctx.createGain();
-              osc1.type = 'sine';
-              osc1.frequency.setValueAtTime(987.77, ctx.currentTime);
-              gain1.gain.setValueAtTime(0.5, ctx.currentTime);
-              gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-              osc1.connect(gain1);
-              gain1.connect(ctx.destination);
-              osc1.start(ctx.currentTime);
-              osc1.stop(ctx.currentTime + 0.3);
-
-              const osc2 = ctx.createOscillator();
-              const gain2 = ctx.createGain();
-              osc2.type = 'sine';
-              osc2.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
-              gain2.gain.setValueAtTime(0.5, ctx.currentTime + 0.2);
-              gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-              osc2.connect(gain2);
-              gain2.connect(ctx.destination);
-              osc2.start(ctx.currentTime + 0.2);
-              osc2.stop(ctx.currentTime + 0.6);
-            } catch (e) { console.error("Audio API not supported", e); }
-          };
-
-          const playGameOverSound = () => {
-            try {
-              const AudioContext = window.AudioContext || window.webkitAudioContext;
-              const ctx = new AudioContext();
-              const now = ctx.currentTime;
-              const playNote = (freq, startTime, duration) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, startTime);
-                gain.gain.setValueAtTime(0.3, startTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(startTime);
-                osc.stop(startTime + duration);
-              };
-              playNote(523.25, now, 0.2);
-              playNote(659.25, now + 0.15, 0.2);
-              playNote(783.99, now + 0.3, 0.2);
-              playNote(1046.50, now + 0.45, 0.8);
-            } catch (e) { console.error("Audio API not supported", e); }
-          };
-
-          const startRound = () => {
-            const randomTarget = animalsData[Math.floor(Math.random() * animalsData.length)];
-            setTarget(randomTarget);
-            const distractors = animalsData.filter(a => a.id !== randomTarget.id);
-            const selectedDistractors = shuffleArray(distractors).slice(0, 4);
-            setOptions(shuffleArray([randomTarget, ...selectedDistractors]));
-            setFeedback(null);
-            speak(randomTarget.name);
-          };
-
-          useEffect(() => { startRound(); }, []);
-
-          useEffect(() => {
-            if (timeLeft > 0 && !gameOver) {
-              const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-              return () => clearTimeout(timerId);
-            } else if (timeLeft === 0 && !gameOver) {
-              setGameOver(true);
-              playGameOverSound();
-            }
-          }, [timeLeft, gameOver]);
-
-          const handleTap = (animal) => {
-            if (feedback?.type === 'success' || gameOver) return; 
-            if (animal.id === target.id) {
-              playDingDong();
-              setScore(s => s + 1);
-              setFeedback({ type: 'success', text: `✨ Correct!` });
-              setTimeout(startRound, 1200);
-            } else {
-              speak('Try again.');
-              setFeedback({ type: 'error', text: `Try again!` });
-              setTimeout(() => setFeedback(null), 800);
-            }
-          };
-
-          const restartGame = () => {
-            setScore(0);
-            setTimeLeft(60);
-            setGameOver(false);
-            startRound();
-          };
-
-          if (gameOver) {
-            return (
-              <div className="flex flex-col h-full animate-in fade-in zoom-in max-h-screen">
-                 <button onClick={onHome} className="p-3 bg-white text-orange-500 rounded-2xl shadow-sm border mb-6 w-12 active:scale-90 transition-all"><ArrowLeft size={24}/></button>
-                 <div className="flex-1 flex flex-col items-center justify-center max-w-xl mx-auto w-full pb-8 -translate-y-[10vh]">
-                   <div className="bg-white p-12 rounded-[3.5rem] shadow-xl w-full flex flex-col items-center text-center relative border border-sky-50">
-                      <h2 className="text-4xl font-black text-gray-800 mb-4">Time's Up!</h2>
-                      <div className="text-6xl mb-6">🏆</div>
-                      <p className="text-xl font-bold text-gray-500 mb-8">Your final score is <span className="text-orange-500 text-3xl mx-2">{score}</span></p>
-                      <button onClick={restartGame} className="bg-orange-500 text-white px-10 py-4 rounded-full font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center gap-3">
-                        <RotateCcw size={24} /> Play Again
-                      </button>
-                   </div>
-                 </div>
-              </div>
-            );
-          }
-
-          return (
-            <div className="flex flex-col h-full animate-in fade-in zoom-in max-h-screen">
-              <button onClick={onHome} className="p-3 bg-white text-orange-500 rounded-2xl shadow-sm border mb-6 w-12 active:scale-90 transition-all"><ArrowLeft size={24}/></button>
-              <div className="flex-1 flex flex-col items-center justify-center max-w-xl mx-auto w-full pb-8 -translate-y-[10vh]">
-                <div className="bg-white p-12 rounded-[3.5rem] shadow-xl mb-12 w-full flex flex-col items-center text-center relative border border-sky-50">
-                  <div className="flex gap-4 mb-8">
-                    <div className="bg-rose-50 text-rose-500 px-6 py-2 rounded-full font-black text-sm shadow-sm tracking-widest uppercase">Score: {score}</div>
-                    <div className={`bg-orange-50 ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-orange-500'} px-6 py-2 rounded-full font-black text-sm shadow-sm tracking-widest uppercase`}>
-                      Time: {timeLeft}s
-                    </div>
-                  </div>
-                  <button onClick={() => speak(target?.name)} className="w-28 h-28 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-8 hover:scale-105 active:scale-95 shadow-inner transition-all"><Volume2 size={56} /></button>
-                  <div className="text-2xl font-black text-gray-600 uppercase tracking-tighter">{feedback ? feedback.text : `Where is the ${target?.name}?`}</div>
-                </div>
-                <div className="grid grid-cols-5 gap-4 w-full">
-                  {options.map((animal) => (
-                    <button key={animal.id} onClick={() => handleTap(animal)} className="bg-white aspect-square rounded-[2rem] shadow-sm border-2 border-transparent hover:border-orange-300 hover:bg-orange-50 active:scale-90 transition-all p-3 flex items-center justify-center shadow-orange-100/50">
-                      <AnimalIcon name={animal.name} emoji={animal.emoji} className="text-5xl w-full h-full object-contain" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        // --- Game Logic: Matching Game ---
-        const memoryAnimalData = [
-          { id: 'snake', name: 'Snake', icon: '🐍', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f40d.svg' },
-          { id: 'crow', name: 'Crow', icon: '🐦‍⬛', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f426-200d-2b1b.svg' },
-          { id: 'horse', name: 'Horse', icon: '🐴', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f434.svg' },
-          { id: 'dog', name: 'Dog', icon: '🐶', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f436.svg' },
-          { id: 'whale', name: 'Whale', icon: '🐳', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f433.svg' },
-          { id: 'elephant', name: 'Elephant', icon: '🐘', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f418.svg' },
-          { id: 'lion', name: 'Lion', icon: '🦁', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f981.svg' },
-          { id: 'human', name: 'Human', icon: '👦', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f466.svg' }, 
-          { id: 'seal', name: 'Seal', icon: '🦭', imgUrl: 'https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f9ad.svg' },
-          { id: 'eagle', name: 'Eagle', icon: '🦅', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f985.svg' }
-        ];
-
-        function AaMemoryGameView({ onHome }) {
-          const [cards, setCards] = useState([]);
-          const [flipped, setFlipped] = useState([]);
-          const [solved, setSolved] = useState([]);
-          const [disabled, setDisabled] = useState(false);
-          const [moves, setMoves] = useState(0);
-          const [matches, setMatches] = useState(0);
-          
-          const [showIntro, setShowIntro] = useState(true);
-          const [showWin, setShowWin] = useState(false);
-          const [isMuted, setIsMuted] = useState(true);
-          const [toasts, setToasts] = useState([]);
-
-          const audioCtxRef = useRef(null);
-          const fadeIntervalRef = useRef(null);
-          
-          const bgMusicRef = useRef(null);
-          const matchSoundRef = useRef(null);
-          const errorSoundRef = useRef(null);
-          const winSoundRef = useRef(null);
-
-          useEffect(() => {
-            bgMusicRef.current = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/animals/amazing_animals_bgm.mp3');
-            bgMusicRef.current.loop = true;
-            bgMusicRef.current.preload = 'auto';
-
-            matchSoundRef.current = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/correct.mp3');
-            matchSoundRef.current.preload = 'auto';
-
-            errorSoundRef.current = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/error.mp3');
-            errorSoundRef.current.preload = 'auto';
-
-            winSoundRef.current = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/freesound_crunchpixstudio-purchase-success-384963.mp3');
-            winSoundRef.current.preload = 'auto';
-
-            initGame();
-
-            return () => {
-              if (bgMusicRef.current) {
-                bgMusicRef.current.pause();
-                bgMusicRef.current.src = "";
-              }
-              if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-            };
-          }, []);
-
-          const initAudio = () => {
-            if (!audioCtxRef.current) {
-              audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtxRef.current.state === 'suspended') {
-              audioCtxRef.current.resume();
-            }
-          };
-
-          const playTone = (freq, type, duration, vol) => {
-            if (!audioCtxRef.current || isMuted) return;
-            const osc = audioCtxRef.current.createOscillator();
-            const gain = audioCtxRef.current.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtxRef.current.currentTime);
-            gain.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
-            gain.gain.linearRampToValueAtTime(vol, audioCtxRef.current.currentTime + 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtxRef.current.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtxRef.current.destination);
-            osc.start();
-            osc.stop(audioCtxRef.current.currentTime + duration);
-          };
-
-          const playSfx = (type) => {
-            if (isMuted) return;
-            if (type === 'flip') {
-              playTone(600, 'sine', 0.1, 0.05);
-            } else if (type === 'match' && matchSoundRef.current) {
-              matchSoundRef.current.currentTime = 0;
-              matchSoundRef.current.play().catch(() => {});
-            } else if (type === 'error' && errorSoundRef.current) {
-              errorSoundRef.current.currentTime = 0;
-              errorSoundRef.current.play().catch(() => {});
-            } else if (type === 'win' && winSoundRef.current) {
-              winSoundRef.current.currentTime = 0;
-              winSoundRef.current.play().catch(() => {});
-            }
-          };
-
-          const playMusicWithFadeIn = () => {
-            if (!bgMusicRef.current) return;
-            bgMusicRef.current.volume = 0;
-            const playPromise = bgMusicRef.current.play();
-            
-            if (playPromise !== undefined) {
-              playPromise.then(() => {
-                setIsMuted(false);
-                if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-                let vol = 0;
-                fadeIntervalRef.current = setInterval(() => {
-                  vol += 0.025;
-                  if (vol >= 0.20) {
-                    if (bgMusicRef.current) bgMusicRef.current.volume = 0.20;
-                    clearInterval(fadeIntervalRef.current);
-                  } else {
-                    if (bgMusicRef.current) bgMusicRef.current.volume = vol;
-                  }
-                }, 100);
-              }).catch((e) => {
-                console.warn("BGM playback failed. Browser might have blocked it.", e);
-                setIsMuted(true);
-              });
-            }
-          };
-
-          const toggleMusic = () => {
-            initAudio();
-            if (!isMuted) {
-              if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-              if (bgMusicRef.current) bgMusicRef.current.pause();
-              setIsMuted(true);
-            } else {
-              playMusicWithFadeIn();
-            }
-          };
-
-          const showToast = (message, type = 'info') => {
-            const id = Date.now() + Math.random();
-            setToasts(prev => [...prev, { id, message, type }]);
-            setTimeout(() => {
-              setToasts(prev => prev.filter(t => t.id !== id));
-            }, 4000);
-          };
-
-          const fetchAnimalFunFact = async (animalName) => {
-            if (!apiKey) {
-              showToast(`Great! You found the ${animalName}!`, 'success');
-              return;
-            }
-            showToast(`Asking the AI teacher for a fun fact about ${animalName}...`, 'info');
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const prompt = `Give a fun fact about the animal "${animalName}" for a 7-year-old child in English. Keep it under one short sentence, playful and cute, no introductory greetings.`;
-            const payload = {
-              contents: [{ parts: [{ text: prompt }] }],
-              systemInstruction: { parts: [{ text: "You are an animal expert who is great at interacting with kids." }] }
-            };
-            let retries = 0;
-            let delay = 1000;
-            while (retries < 5) {
-              try {
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) throw new Error('API Request Failed');
-                const data = await response.json();
-                const fact = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (fact) {
-                  showToast(`🤖 AI Teacher says: ${fact}`, 'success');
-                  return;
-                }
-              } catch (error) {
-                retries++;
-                if (retries >= 5) {
-                  showToast(`Oops, the AI teacher is a bit busy right now. Try again later for a fun fact about ${animalName}!`, 'error');
-                  return;
-                }
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-              }
-            }
-          };
-
-          const initGame = () => {
-            setShowWin(false);
-            setToasts([]);
-            setMoves(0);
-            setMatches(0);
-            setFlipped([]);
-            setSolved([]);
-            setDisabled(false);
-
-            let gameCards = [];
-            memoryAnimalData.forEach(animal => {
-              gameCards.push({ ...animal, type: 'image', uid: Math.random().toString(36).substr(2, 9) });
-              gameCards.push({ ...animal, type: 'text', uid: Math.random().toString(36).substr(2, 9) });
-            });
-            setCards(shuffleArray(gameCards));
-          };
-
-          const handleStartGame = () => {
-            setShowIntro(false);
-            initAudio();
-            playMusicWithFadeIn();
-          };
-
-          const handleCardClick = (index) => {
-            if (disabled || flipped.includes(index) || solved.includes(index)) return;
-            
-            playSfx('flip');
-            const newFlipped = [...flipped, index];
-            setFlipped(newFlipped);
-
-            if (newFlipped.length === 2) {
-              setDisabled(true);
-              setMoves(m => m + 1);
-              
-              const match = cards[newFlipped[0]].id === cards[newFlipped[1]].id;
-              if (match) {
-                setTimeout(() => playSfx('match'), 500);
-                setTimeout(() => {
-                  setSolved(prev => {
-                    const newSolved = [...prev, newFlipped[0], newFlipped[1]];
-                    setMatches(newSolved.length / 2);
-                    if (newSolved.length === cards.length) {
-                      setTimeout(() => {
-                        playSfx('win');
-                        setShowWin(true);
-                      }, 500);
-                    }
-                    return newSolved;
-                  });
-                  fetchAnimalFunFact(cards[newFlipped[0]].name);
-                  setFlipped([]);
-                  setDisabled(false);
-                }, 300);
-              } else {
-                setTimeout(() => playSfx('error'), 500);
-                setTimeout(() => {
-                  setFlipped([]);
-                  setDisabled(false);
-                }, 1000);
-              }
-            }
-          };
-
-          return (
-            <div className="flex flex-col h-full relative font-sans animate-in fade-in duration-500">
-              <button onClick={onHome} className="absolute top-0 left-0 p-3 bg-white text-sky-500 rounded-2xl shadow-sm border w-12 hover:bg-sky-50 active:scale-90 transition-all z-40">
-                <ArrowLeft size={24}/>
-              </button>
-
-              {showIntro && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[60]">
-                  <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md text-center shadow-2xl mx-4 animate-in zoom-in duration-300">
-                    <div className="text-5xl sm:text-6xl mb-4">🐾</div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-sky-600 mb-4">Welcome to Amazing Animals!</h2>
-                    <div className="text-base sm:text-lg text-gray-700 mb-6 text-left bg-sky-50 p-4 rounded-xl border border-sky-100">
-                      <strong>How to play:</strong><br/>
-                      <ul className="list-disc pl-5 mt-2 space-y-1">
-                        <li>Click on the cards to flip them.</li>
-                        <li>Match the animal picture with its English name.</li>
-                        <li>Find all 10 pairs to win!</li>
-                      </ul>
-                    </div>
-                    <button onClick={handleStartGame} className="bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95 text-xl border-b-4 border-amber-600">
-                      Start Game
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {showWin && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[60] animate-in fade-in duration-300">
-                  <div className="bg-white rounded-3xl p-8 max-w-sm text-center shadow-2xl animate-in zoom-in duration-300">
-                    <div className="text-6xl mb-4">🎉</div>
-                    <h2 className="text-3xl font-bold text-green-600 mb-2">Great Job!</h2>
-                    <p className="text-lg text-gray-700 mb-6">You found all the animals!<br/>It took you <span className="font-bold text-amber-500">{moves}</span> moves.</p>
-                    <button onClick={initGame} className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform transition hover:scale-105 active:scale-95 text-lg">
-                      Play Again
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="absolute top-0 right-0 z-40">
-                <button onClick={toggleMusic} className="bg-white w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow border-2 border-sky-200 hover:bg-sky-50 text-xl transition-colors no-select">
-                  {isMuted ? '🔇' : '🎵'}
-                </button>
-              </div>
-
-              <div className="text-center mb-2 flex-shrink-0 pt-2">
-                <h1 className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1 drop-shadow-md border-b-4 border-amber-400 pb-1 inline-block">🐾 Amazing Animals 🐾</h1>
-                <div className="mt-2 flex justify-center gap-4 text-sm sm:text-base font-bold text-sky-800">
-                  <div className="bg-white px-3 py-1 sm:px-4 sm:py-2 rounded-full shadow-sm border-2 border-sky-200">
-                    Moves: <span className="text-amber-500">{moves}</span>
-                  </div>
-                  <div className="bg-white px-3 py-1 sm:px-4 sm:py-2 rounded-full shadow-sm border-2 border-sky-200">
-                    Matches: <span className="text-green-500">{matches}</span> / 10
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex-1 flex justify-center items-center pb-2 px-4 w-full">
-                <div className="grid grid-cols-4 grid-rows-5 sm:grid-cols-5 sm:grid-rows-4 gap-2 sm:gap-3 w-full max-w-4xl h-full perspective">
-                  {cards.map((card, index) => {
-                    const isFlipped = flipped.includes(index) || solved.includes(index);
-                    const isSolved = solved.includes(index);
-
-                    return (
-                      <div key={card.uid} onClick={() => handleCardClick(index)} className="relative w-full h-full cursor-pointer no-select perspective">
-                        <div className={`w-full h-full absolute transform-style-3d rounded-xl shadow-md ${isFlipped ? 'rotate-y-180' : ''}`}>
-                          <div className="w-full h-full absolute backface-hidden bg-gradient-to-br from-emerald-400 to-green-600 rounded-xl flex items-center justify-center border-4 border-white hover:opacity-90 transition-opacity">
-                            <span className="text-3xl sm:text-4xl text-white opacity-50">🍃</span>
-                          </div>
-                          <div className={`w-full h-full absolute backface-hidden rotate-y-180 rounded-xl flex flex-col items-center justify-center border-4 p-1 sm:p-2 text-center transition-colors ${isSolved ? 'border-green-500 bg-green-50' : 'border-amber-300 bg-white'}`}>
-                            {card.type === 'image' ? (
-                              <img 
-                                src={card.imgUrl} 
-                                alt={card.name} 
-                                className="w-12 h-12 sm:w-16 sm:h-16 drop-shadow-sm pointer-events-none object-contain" 
-                                draggable="false" 
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'block';
-                                }} 
-                              />
-                            ) : (
-                              <span className="text-base sm:text-xl font-bold text-slate-800 break-words w-full px-1">{card.name}</span>
-                            )}
-                            {card.type === 'image' && <span className="text-4xl sm:text-5xl drop-shadow-sm hidden">{card.icon}</span>}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mt-2 mb-2 sm:mb-4 flex-shrink-0 text-center">
-                <button onClick={initGame} className="bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold py-2 px-6 rounded-full shadow-lg transform transition hover:scale-105 active:scale-95 text-base sm:text-lg border-b-4 border-amber-600">
-                  🔄 Restart
-                </button>
-              </div>
-
-              <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 w-[90%] max-w-md z-[100] flex flex-col gap-2 pointer-events-none">
-                {toasts.map(toast => {
-                  const bgColor = toast.type === 'success' ? 'bg-green-100 border-green-400 text-green-800' : 
-                                  toast.type === 'error' ? 'bg-red-100 border-red-400 text-red-800' : 
-                                  'bg-blue-100 border-blue-400 text-blue-800';
-                  return (
-                    <div key={toast.id} className={`p-4 rounded-xl shadow-lg border-2 ${bgColor} flex items-center gap-3 pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-300`}>
-                      <span className="text-2xl">{toast.type === 'success' ? '✨' : toast.type === 'error' ? '❌' : '🤖'}</span>
-                      <p className="font-bold text-sm sm:text-base">{toast.message}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        }
-
-        // --- Main App Component ---
-
+        // --- Main App Component (Pure Home Page) ---
         function App() {
-          const [currentView, setCurrentView] = useState('home');
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+          // 處理導覽列錨點平滑捲動
           const scrollToSection = (sectionId) => {
-            if (currentView !== 'home') {
-              setCurrentView('home');
-              setTimeout(() => {
-                document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
-            } else {
-              document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-            }
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
             setIsMobileMenuOpen(false);
           };
 
@@ -1001,113 +89,103 @@
                   </span>
                 </div>
                 <div className="hidden md:flex items-center space-x-12">
-                  <button onClick={() => scrollToSection('top')} className={`font-bold text-base uppercase tracking-widest transition-colors ${currentView === 'home' ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'}`}>Home</button>
-                  <button onClick={() => scrollToSection('elementary')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest tracking-wide transition-colors">Elementary</button>
-                  <button onClick={() => scrollToSection('steam')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest tracking-wide transition-colors">STEAM</button>
+                  <button onClick={() => scrollToSection('top')} className="font-bold text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
+                  <button onClick={() => scrollToSection('elementary')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest transition-colors">Elementary</button>
+                  <button onClick={() => scrollToSection('steam')} className="text-gray-500 font-bold text-base hover:text-orange-600 uppercase tracking-widest transition-colors">STEAM</button>
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2"><Menu size={28} /></button>
               </div>
             </nav>
           );
 
-          const AmazingAnimalsPage = () => {
-            const [moduleView, setModuleView] = useState('home');
-            return (
-              <div className="h-[calc(100vh-80px)] bg-sky-50 flex flex-col relative overflow-hidden">
-                <main className="flex-1 p-6 max-w-7xl mx-auto w-full h-full overflow-y-auto overflow-x-hidden">
-                  {moduleView === 'home' && <AaHomeView setModuleView={setModuleView} />}
-                  {moduleView === 'learn' && <AaLearnView onHome={() => setModuleView('home')} />}
-                  {moduleView === 'swatter' && <AaSwatterGameView onHome={() => setModuleView('home')} />}
-                  {moduleView === 'memory' && <AaMemoryGameView onHome={() => setModuleView('home')} />}
-                  {moduleView === 'downloads' && <AaDownloadsView onHome={() => setModuleView('home')} />}
-                </main>
-              </div>
-            );
-          };
-
           return (
             <div className="min-h-screen bg-gray-50 flex flex-col h-screen overflow-hidden">
               <Navbar />
 
-              <div className="flex-1 overflow-hidden">
-                {currentView === 'amazing-animals' ? <AmazingAnimalsPage /> : 
-                 currentView === 'steam-video' ? <SteamVideoPage onBack={() => setCurrentView('home')} /> : (
-                  <div className="h-full overflow-y-auto custom-scroll">
-                    {/* Top Main Banner Ad */}
-                    <div id="top" className="max-w-7xl mx-auto px-4 pt-4"><AdBanner format="horizontal" /></div>
+              <div className="flex-1 overflow-hidden h-full overflow-y-auto custom-scroll">
+                {/* Top Main Banner Ad */}
+                <div id="top" className="max-w-7xl mx-auto px-4 pt-4">
+                  <AdBanner format="horizontal" />
+                </div>
+                
+                <header className="max-w-7xl mx-auto px-4 py-6 text-center animate-in fade-in slide-in-from-top-4">
+                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight leading-none">Creative Resource Hub</h1>
+                  <p className="text-gray-500 text-base md:text-lg font-bold leading-relaxed max-w-3xl mx-auto text-center tracking-wide opacity-80">
+                    Providing free, professional English and STEAM teaching resources for educators worldwide.
+                  </p>
+                </header>
+
+                <main className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-10">
+                  <div className="lg:w-4/5">
                     
-                    <header className="max-w-7xl mx-auto px-4 py-6 text-center animate-in fade-in slide-in-from-top-4">
-                      <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight leading-none">Creative Resource Hub</h1>
-                      <p className="text-gray-500 text-base md:text-lg font-bold leading-relaxed max-w-3xl mx-auto text-center tracking-wide opacity-80">
-                        Providing free, professional English and STEAM teaching resources for educators worldwide.
-                      </p>
-                    </header>
+                    {/* Elementary Section */}
+                    <section id="elementary" className="mb-14">
+                      <div className="flex items-center mb-10">
+                        <LayoutGrid className="text-orange-600 mr-5" size={32} />
+                        <h2 className="text-3xl font-black text-gray-900 uppercase tracking-[0.01em]">Elementary English</h2>
+                      </div>
+                      
+                      <div>
+                        {/* 已經移除 onClick 路由事件，僅保留視覺樣式 */}
+                        <div className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[3rem] p-8 sm:p-10 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all relative overflow-hidden min-h-[12rem] sm:h-44 flex items-center justify-between group shadow-xl">
+                          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-125 duration-700">
+                            <span className="text-[9rem] sm:text-[10rem]">🦁</span>
+                          </div>
+                          <div className="relative z-10">
+                            <span className="bg-white/20 px-5 py-2 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-4 inline-block shadow-sm backdrop-blur-md">Interactive Module</span>
+                            <h3 className="text-3xl font-black mb-2 drop-shadow-2xl">🐾 Amazing Animals</h3>
+                            <p className="text-orange-50 text-sm opacity-90 font-bold mt-1">Interactive audio games & fun TPR activities</p>
+                          </div>
+                          <div className="bg-white/20 p-4 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
+                            <ChevronRight size={36} />
+                          </div>
+                        </div>
+                      </div>
+                    </section>
 
-                    <main className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-10">
-                      <div className="lg:w-4/5">
-                        <section id="elementary" className="mb-14">
-                          <div className="flex items-center mb-10">
-                            <LayoutGrid className="text-orange-600 mr-5" size={32} />
-                            <h2 className="text-3xl font-black text-gray-900 uppercase tracking-[0.01em]">Elementary English</h2>
-                          </div>
-                          
-                          {/* Amazing Animals Module (Moved & Resized) */}
-                          <div>
-                            <div onClick={() => setCurrentView('amazing-animals')} className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[3rem] p-8 sm:p-10 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all relative overflow-hidden min-h-[12rem] sm:h-44 flex items-center justify-between group shadow-xl">
-                              <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-125 duration-700"><span className="text-[9rem] sm:text-[10rem]">🦁</span></div>
-                              <div className="relative z-10">
-                                <span className="bg-white/20 px-5 py-2 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-4 inline-block shadow-sm backdrop-blur-md">Interactive Module</span>
-                                <h3 className="text-3xl font-black mb-2 drop-shadow-2xl">🐾 Amazing Animals</h3>
-                                <p className="text-orange-50 text-sm opacity-90 font-bold mt-1">Interactive audio games & fun TPR activities</p>
-                              </div>
-                              <div className="bg-white/20 p-4 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                                <ChevronRight size={36} />
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-
-                        <section id="steam" className="mb-14">
-                          <div className="flex items-center mb-10">
-                            <Rocket className="text-orange-600 mr-5" size={32} />
-                            <h2 className="text-3xl font-black text-gray-900 uppercase tracking-[0.01em]">STEAM Learning</h2>
-                          </div>
-
-                          {/* LEGO DIY Bow Video Lesson (Moved & Resized) */}
-                          <div>
-                            <div onClick={() => setCurrentView('steam-video')} className="bg-gradient-to-br from-indigo-500 to-purple-800 rounded-[3rem] p-8 sm:p-10 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all relative overflow-hidden min-h-[12rem] sm:h-44 flex items-center justify-between group shadow-xl">
-                              <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-125 duration-700"><span className="text-[9rem] sm:text-[10rem]">🏹</span></div>
-                              <div className="relative z-10">
-                                <span className="bg-white/20 px-5 py-2 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-4 inline-block shadow-sm backdrop-blur-md">STEAM Video Lesson</span>
-                                <h3 className="text-3xl font-black mb-2 drop-shadow-2xl">🧱 LEGO 9868 SPM: Bow & Arrow</h3>
-                                <p className="text-indigo-50 text-sm opacity-90 font-bold mt-1">Hands-on creation and mechanical logic</p>
-                              </div>
-                              <div className="bg-white/20 p-4 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                                <Youtube size={36} />
-                              </div>
-                            </div>
-                          </div>
-                        </section>
+                    {/* STEAM Section */}
+                    <section id="steam" className="mb-14">
+                      <div className="flex items-center mb-10">
+                        <Rocket className="text-orange-600 mr-5" size={32} />
+                        <h2 className="text-3xl font-black text-gray-900 uppercase tracking-[0.01em]">STEAM Learning</h2>
                       </div>
 
-                      <aside className="lg:w-1/5">
-                        {/* Square Sidebar Ad */}
-                        <div className="sticky top-24 z-10">
-                          <AdBanner format="square" />
+                      <div>
+                        {/* 已經移除 onClick 路由事件，僅保留視覺樣式 */}
+                        <div className="bg-gradient-to-br from-indigo-500 to-purple-800 rounded-[3rem] p-8 sm:p-10 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all relative overflow-hidden min-h-[12rem] sm:h-44 flex items-center justify-between group shadow-xl">
+                          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-125 duration-700">
+                            <span className="text-[9rem] sm:text-[10rem]">🏹</span>
+                          </div>
+                          <div className="relative z-10">
+                            <span className="bg-white/20 px-5 py-2 rounded-full text-[10px] font-black tracking-[0.2em] uppercase mb-4 inline-block shadow-sm backdrop-blur-md">STEAM Video Lesson</span>
+                            <h3 className="text-3xl font-black mb-2 drop-shadow-2xl">🧱 LEGO 9868 SPM: Bow & Arrow</h3>
+                            <p className="text-indigo-50 text-sm opacity-90 font-bold mt-1">Hands-on creation and mechanical logic</p>
+                          </div>
+                          <div className="bg-white/20 p-4 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
+                            <Youtube size={36} />
+                          </div>
                         </div>
-                      </aside>
-                    </main>
-
-                    <footer className="bg-gray-900 text-white py-20 text-center mt-12">
-                      <div className="max-w-7xl mx-auto px-4">
-                        <div className="flex items-center justify-center mb-10 text-3xl font-black tracking-tighter uppercase">
-                          CurioCat
-                        </div>
-                        <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 CurioCat. All rights reserved.</div>
                       </div>
-                    </footer>
+                    </section>
+
                   </div>
-                )}
+
+                  <aside className="lg:w-1/5">
+                    {/* Square Sidebar Ad */}
+                    <div className="sticky top-24 z-10">
+                      <AdBanner format="square" />
+                    </div>
+                  </aside>
+                </main>
+
+                <footer className="bg-gray-900 text-white py-20 text-center mt-12">
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="flex items-center justify-center mb-10 text-3xl font-black tracking-tighter uppercase">
+                      CurioCat
+                    </div>
+                    <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 CurioCat. All rights reserved.</div>
+                  </div>
+                </footer>
               </div>
             </div>
           );
