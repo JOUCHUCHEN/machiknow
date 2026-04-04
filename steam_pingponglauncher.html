@@ -134,15 +134,14 @@
               }
           };
 
-          // 處理導覽列行為：跳轉回根目錄並加上錨點
+          // 處理導覽列行為：跳轉回首頁對應區塊
           const handleNavAction = (targetId) => {
-            const baseUrl = 'https://jouchuchen.github.io/machiknow/index.html';
-            if (targetId === 'top') {
-                window.location.href = baseUrl;
-            } else {
-                // 強制導向完整的 URL 加上錨點，瀏覽器載入後會自動對準區塊
-                window.location.href = `${baseUrl}#${targetId}`;
-            }
+            const baseUrl = 'https://jouchuchen.github.io/machiknow/';
+            // 點擊 Home 則直接回首頁，其餘則帶上錨點
+            const targetUrl = targetId === 'top' ? baseUrl : `${baseUrl}#${targetId}`;
+            
+            // 使用 window.top 確保在 iframe 中也能跳轉整個瀏覽器視窗
+            window.top.location.href = targetUrl;
             setIsMobileMenuOpen(false);
           };
 
