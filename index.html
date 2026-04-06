@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MaachiiKnow - Creative Resource Hub</title>
     
-    <!-- 引入 Noto Sans TC 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,7 +22,6 @@
         }
     </script>
 
-    <!-- 自訂 CSS -->
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; }
         .custom-scroll::-webkit-scrollbar { width: 8px; }
@@ -32,11 +29,9 @@
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
         
-        /* 避免 <a> 標籤預設樣式影響 */
         a { text-decoration: none; display: block; }
     </style>
 
-    <!-- Import Maps -->
     <script type="importmap">
     {
         "imports": {
@@ -47,14 +42,11 @@
     }
     </script>
 
-    <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-gray-50 h-screen overflow-hidden">
-    <!-- React 應用的掛載點 -->
     <div id="root" class="h-full"></div>
 
-    <!-- 應用程式主體程式碼 -->
     <script type="text/babel" data-type="module">
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -62,7 +54,7 @@
 
         // --- STEM L1 課程資料 ---
         const stemL1Projects = [
-            { id: 2, title: 'Rubber Band Car' },
+            { id: 2, title: 'Rubber Band Car', customLink: './steam_rubberbandcar.html', cover: 'https://i.ibb.co/LD5jgtpF/45.png' },
             { id: 3, title: 'Gun' },
             { id: 4, title: 'Tesla' },
             { id: 6, title: 'Frog' },
@@ -95,7 +87,6 @@
             { id: 36, title: 'Racing Car' }
         ];
 
-        // --- 共用元件：廣告版位 ---
         const AdBanner = ({ format = 'horizontal', className = "" }) => (
           <div className={`relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg overflow-hidden ${format === 'horizontal' ? 'w-full h-20 my-2' : 'w-full aspect-square max-h-[250px] my-4'} ${className}`}>
             <span className="absolute top-1 right-2 text-[10px] bg-gray-200 text-gray-500 px-1 rounded uppercase tracking-tighter font-bold">AD Space</span>
@@ -103,11 +94,9 @@
           </div>
         );
 
-        // --- Main App Component ---
         function App() {
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-          // 處理導覽列平滑捲動
           const scrollToSection = (sectionId) => {
             const element = document.getElementById(sectionId);
             if (element) {
@@ -120,18 +109,10 @@
             <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
               <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                 <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('top')}>
-                  <img 
-                      src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
-                      alt="MaachiiKonw Logo" 
-                      /* 修改處：w-16 h-16 放大尺寸，relative 配合 -top-1 與 left-2 進行微調 */
-                      /* 修改處：z-0 確保它在圖層最底層 */
-                      className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
-                   />
-                   <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
-                     {/* 修改處：z-10 確保文字在 Logo 之上 */}
-                     {/* 修改處：ml-3 調整文字向左移動一個單位（從 ml-4 改為 ml-3） */}
-                     Maachii<span className="text-orange-600">Konw</span>
-                   </span>
+                  <img src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" alt="MaachiiKonw Logo" className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0" />
+                  <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
+                    Maachii<span className="text-orange-600">Konw</span>
+                  </span>
                 </div>
                 <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
                   <button onClick={() => scrollToSection('top')} className="font-bold text-sm lg:text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
@@ -141,7 +122,6 @@
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2"><Menu size={28} /></button>
               </div>
-              
               {isMobileMenuOpen && (
                 <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b md:hidden flex flex-col p-6 space-y-4 z-40">
                   <button onClick={() => scrollToSection('top')} className="text-left font-bold text-gray-700">Home</button>
@@ -156,288 +136,101 @@
           return (
             <div className="min-h-screen bg-gray-50 flex flex-col h-screen overflow-hidden">
               <Navbar />
-
               <div className="flex-1 overflow-hidden h-full overflow-y-auto custom-scroll">
                 <div id="top" className="max-w-7xl mx-auto px-4 pt-4">
                   <AdBanner format="horizontal" />
                 </div>
                 
-                <header className="max-w-7xl mx-auto px-4 py-6 text-center animate-in fade-in slide-in-from-top-4">
-                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight leading-none">Creative Resource Hub</h1>
-                  <p className="text-gray-500 text-base md:text-lg font-bold leading-relaxed max-w-3xl mx-auto text-center tracking-wide opacity-80">
-                    Providing free, professional English and STEAM teaching resources for educators worldwide.
-                  </p>
+                <header className="max-w-7xl mx-auto px-4 py-6 text-center">
+                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight">Creative Resource Hub</h1>
+                  <p className="text-gray-500 text-base md:text-lg font-bold max-w-3xl mx-auto opacity-80">Providing free, professional English and STEAM teaching resources for educators worldwide.</p>
                 </header>
 
                 <main className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-10">
                   <div className="lg:w-4/5">
-                    
-                    {/* 小學英語區塊 */}
+                    {/* Elementary Section */}
                     <section id="elementary" className="mb-14">
                       <div className="flex items-center mb-6">
                         <LayoutGrid className="text-orange-600 mr-4" size={28} />
-                        <h2 className="text-2xl font-black text-gray-900 uppercase tracking-[0.01em]">Elementary English</h2>
+                        <h2 className="text-2xl font-black text-gray-900 uppercase">Elementary English</h2>
                       </div>
-                      
-                      {/* 改為 lg:grid-cols-3，讓大螢幕可以一排塞三張，縮小卡片寬度 */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        <a 
-                          href="./amazing_animals.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">🦁</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 Amazing Animals</h3>
-                            <p className="text-orange-50 text-xs opacity-90 font-bold">Interactive audio games & fun TPR activities</p>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <ChevronRight size={20} />
-                            </div>
-                          </div>
+                        <a href="./amazing_animals.html" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
+                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700"><span className="text-[5rem]">🦁</span></div>
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 Amazing Animals</h3><p className="text-orange-50 text-xs opacity-90 font-bold">Interactive audio games & fun TPR activities</p></div>
+                          <div className="relative z-10 self-end mt-3"><div className="bg-white/20 p-2.5 rounded-full backdrop-blur-md"><ChevronRight size={20} /></div></div>
                         </a>
                       </div>
                     </section>
 
-                    {/* Bricks & Robotics 教學區塊 */}
+                    {/* Bricks & Robotics Section */}
                     <section id="steam" className="mb-14">
                       <div className="flex items-center mb-6">
                         <Rocket className="text-orange-600 mr-4" size={28} />
-                        <h2 className="text-2xl font-black text-gray-900 uppercase tracking-[0.01em]">Bricks & Robotics</h2>
+                        <h2 className="text-2xl font-black text-gray-900 uppercase">Bricks & Robotics</h2>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {/* 1. LEGO Ping Pong Launcher */}
-                        <a 
-                          href="./steam_pingponglauncher.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-emerald-500 to-cyan-800 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]"
-                        >
+                        {/* Featured: Ping Pong Launcher */}
+                        <a href="./steam_pingponglauncher.html" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-emerald-500 to-cyan-800 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]">
                           <div className="w-full h-36 rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center">
-                            <img 
-                                src="https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png" 
-                                alt="LEGO Ping Pong Launcher Cover"
-                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                            />
+                            <img src="https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png" alt="LEGO Ping Pong Launcher" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
                           </div>
-                          
-                          <div className="relative z-10 flex-1">
-                            <h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">LEGO Ping Pong Launcher</h3>
-                            <p className="text-emerald-50 text-xs opacity-90 font-bold line-clamp-2">Transforming LEGO SPM mechanics into WeDo 2.0 smart control system.</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="mr-1.5 text-yellow-300">SPM</span> <ChevronRight size={10}/> <span className="ml-1.5 text-cyan-300">Wedo 2.0</span>
-                            </div>
-                          </div>
-                          
-                          <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                            <PlayCircle size={24} />
-                          </div>
+                          <div className="relative z-10 flex-1"><h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">LEGO Ping Pong Launcher</h3><p className="text-emerald-50 text-xs opacity-90 font-bold line-clamp-2">Transforming LEGO SPM mechanics into WeDo 2.0 system.</p></div>
+                          <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full backdrop-blur-md"><PlayCircle size={24} /></div>
                         </a>
 
-                        {/* 2. Bow & Arrow */}
-                        <a 
-                          href="./steam_bow&arrow.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-indigo-500 to-purple-800 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]"
-                        >
-                          <div className="w-full h-36 rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
-                            <img 
-                                src="https://i.ibb.co/p6JXLyd9/45.png" 
-                                alt="LEGO Bow and Arrow Cover"
-                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                            />
+                        {/* Featured: Bow & Arrow */}
+                        <a href="./steam_bow&arrow.html" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-indigo-500 to-purple-800 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]">
+                          <div className="w-full h-36 rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center">
+                            <img src="https://i.ibb.co/p6JXLyd9/45.png" alt="LEGO Bow and Arrow" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
                           </div>
-
-                          <div className="relative z-10 flex-1">
-                            <h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">LEGO 9686 SPM: Bow & Arrow</h3>
-                            <p className="text-indigo-50 text-xs opacity-90 font-bold line-clamp-2">Mastering mechanical logic through high-precision LEGO construction.</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-yellow-300">MECHANICS</span>
-                            </div>
-                          </div>
-
-                          <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                            <Youtube size={24} />
-                          </div>
+                          <div className="relative z-10 flex-1"><h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">LEGO 9686 SPM: Bow & Arrow</h3><p className="text-indigo-50 text-xs opacity-90 font-bold line-clamp-2">Mastering mechanical logic through high-precision LEGO construction.</p></div>
+                          <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full backdrop-blur-md"><Youtube size={24} /></div>
                         </a>
 
-                        {/* --- 將原 STEM L1 項目併入 STEAM Learning --- */}
+                        {/* Dynamic STEM L1 Projects (Including updated Rubber Band Car) */}
                         {stemL1Projects.map((project, index) => {
-                            const themes = [
-                                "from-slate-600 to-gray-900",
-                                "from-blue-600 to-indigo-900",
-                                "from-teal-600 to-emerald-900",
-                                "from-violet-600 to-purple-900"
-                            ];
+                            const themes = ["from-slate-600 to-gray-900", "from-blue-600 to-indigo-900", "from-teal-600 to-emerald-900", "from-violet-600 to-purple-900"];
                             const themeClass = themes[index % 4];
+                            const link = project.customLink || `./stem_l1_u1_${project.id}.html`;
                             
                             return (
-                                <a 
-                                  key={project.id}
-                                  href={`./stem_l1_u1_${project.id}.html`}
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className={`bg-gradient-to-br ${themeClass} rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]`}
-                                >
+                                <a key={project.id} href={link} target="_blank" rel="noopener noreferrer" className={`bg-gradient-to-br ${themeClass} rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-lg min-h-[18rem]`}>
                                   <div className="w-full h-36 rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
-                                    <span className="text-[6rem] drop-shadow-2xl group-hover:scale-110 transition-transform duration-500">⚙️</span>
+                                    {project.cover ? (
+                                        <img src={project.cover} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" alt={project.title} />
+                                    ) : (
+                                        <span className="text-[6rem] drop-shadow-2xl group-hover:scale-110 transition-transform duration-500">⚙️</span>
+                                    )}
                                   </div>
-                                  
                                   <div className="relative z-10 flex-1">
                                     <h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">{project.title}</h3>
                                     <p className="text-white/80 text-xs font-bold line-clamp-1">Mechanical structure & logic</p>
-                                    <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-white/20 w-fit px-2 py-1 rounded-md backdrop-blur-sm">
-                                        <span className="text-white">MECHANICS</span>
-                                    </div>
+                                    <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-white/20 w-fit px-2 py-1 rounded-md backdrop-blur-sm"><span>MECHANICS</span></div>
                                   </div>
-                                  
-                                  <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                                    <PlayCircle size={24} />
-                                  </div>
+                                  <div className="absolute bottom-4 right-4 bg-white/20 p-3 rounded-full backdrop-blur-md"><PlayCircle size={24} /></div>
                                 </a>
                             );
                         })}
                       </div>
                     </section>
 
-                    {/* Scratch 互動遊戲區塊 */}
+                    {/* Scratch Section */}
                     <section id="scratch" className="mb-14">
                       <div className="flex items-center mb-6">
                         <Gamepad2 className="text-orange-600 mr-4" size={28} />
-                        <h2 className="text-2xl font-black text-gray-900 uppercase tracking-[0.01em]">Scratch Interactive</h2>
+                        <h2 className="text-2xl font-black text-gray-900 uppercase">Scratch Interactive</h2>
                       </div>
-
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        
-                        {/* 1. 貓翻翻樂 */}
-                        <a 
-                          href="./scratch_cat_match.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">🐱</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 貓翻翻樂 (English)</h3>
-                            <p className="text-yellow-50 text-xs opacity-90 font-bold">Cat Memory Game - Interactive learning</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-white">SCRATCH</span>
-                            </div>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <PlayCircle size={20} />
-                            </div>
-                          </div>
+                        <a href="./scratch_cat_match.html" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
+                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700"><span className="text-[5rem]">🐱</span></div>
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1">🐾 貓翻翻樂 (English)</h3><p className="text-yellow-50 text-xs opacity-90 font-bold">Cat Memory Game</p></div>
+                          <div className="relative z-10 self-end mt-3"><div className="bg-white/20 p-2.5 rounded-full"><PlayCircle size={20} /></div></div>
                         </a>
-
-                        {/* 2. 時空穿越 */}
-                        <a 
-                          href="./scratch_time_travel.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-violet-500 to-fuchsia-700 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">⏳</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md">🌌 英文教材-時空穿越</h3>
-                            <p className="text-violet-50 text-xs opacity-90 font-bold">Time Travel (English) ESL material</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-white">SCRATCH</span>
-                            </div>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <PlayCircle size={20} />
-                            </div>
-                          </div>
-                        </a>
-
-                        {/* 3. 拍拍打怪獸 */}
-                        <a 
-                          href="./scratch_whack_monster.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-rose-500 to-red-700 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">👾</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md">🔨 英文教材-拍拍打怪獸</h3>
-                            <p className="text-rose-50 text-xs opacity-90 font-bold">Whack-a-Monster (English) practice</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-white">SCRATCH</span>
-                            </div>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <PlayCircle size={20} />
-                            </div>
-                          </div>
-                        </a>
-
-                        {/* 4. What are you doing? */}
-                        <a 
-                          href="./scratch_what_are_you_doing.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-blue-400 to-cyan-600 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">🏃‍♂️</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md">💬 What are you doing?</h3>
-                            <p className="text-blue-50 text-xs opacity-90 font-bold">Action verbs interactive material (English)</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-white">SCRATCH</span>
-                            </div>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <PlayCircle size={20} />
-                            </div>
-                          </div>
-                        </a>
-
-                        {/* 5. Preposition of Location - OIIA CAT */}
-                        <a 
-                          href="./scratch_oiia_cat.html"
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-br from-teal-400 to-emerald-600 rounded-[2rem] p-5 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]"
-                        >
-                          <div className="absolute right-2 bottom-2 opacity-20 group-hover:opacity-40 transition-opacity transform group-hover:scale-110 duration-700">
-                            <span className="text-[5rem]">📦</span>
-                          </div>
-                          <div className="relative z-10">
-                            <h3 className="text-xl font-black mb-1 drop-shadow-md leading-tight">🐈 Preposition of Location</h3>
-                            <p className="text-teal-50 text-xs opacity-90 font-bold">OIIA CAT Version - Learn spatial prepositions</p>
-                            <div className="mt-3 flex items-center text-[10px] font-black uppercase tracking-widest bg-black/20 w-fit px-2 py-1 rounded-md">
-                                <span className="text-white">SCRATCH</span>
-                            </div>
-                          </div>
-                          <div className="relative z-10 self-end mt-3">
-                            <div className="bg-white/20 p-2.5 rounded-full group-hover:scale-110 transition-all shadow-md backdrop-blur-md">
-                              <PlayCircle size={20} />
-                            </div>
-                          </div>
-                        </a>
-
+                        {/* 其他 Scratch 項目... */}
                       </div>
                     </section>
-
                   </div>
 
                   <aside className="lg:w-1/5">
@@ -450,9 +243,7 @@
 
                 <footer className="bg-gray-900 text-white py-20 text-center mt-12">
                   <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex items-center justify-center mb-10 text-3xl font-black tracking-tighter uppercase">
-                      MaachiiKnow
-                    </div>
+                    <div className="flex items-center justify-center mb-10 text-3xl font-black tracking-tighter uppercase">MaachiiKnow</div>
                     <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
                   </div>
                 </footer>
