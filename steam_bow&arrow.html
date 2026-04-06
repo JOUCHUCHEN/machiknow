@@ -100,13 +100,17 @@
               <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                 <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
                   <img 
-                    src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
-                    alt="MaachiiKonw Official Logo" 
-                    className="w-12 h-12 mr-3 rounded-xl shadow-sm border border-orange-100 group-hover:scale-110 group-hover:rotate-6 transition-all"
-                  />
-                  <span className="font-black text-3xl text-gray-900 tracking-tighter">
-                    Maachii<span className="text-orange-600">Konw</span>
-                  </span>
+                      src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
+                      alt="MaachiiKonw Logo" 
+                      /* 修改處：w-16 h-16 放大尺寸，relative 配合 -top-1 與 left-2 進行微調 */
+                      /* 修改處：z-0 確保它在圖層最底層 */
+                      className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
+                   />
+                   <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
+                     {/* 修改處：z-10 確保文字在 Logo 之上 */}
+                     {/* 修改處：ml-3 調整文字向左移動一個單位（從 ml-4 改為 ml-3） */}
+                     Maachii<span className="text-orange-600">Konw</span>
+                   </span>
                 </div>
                 <div className="hidden md:flex items-center space-x-12">
                   <button onClick={handleNavAction} className="font-bold text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
