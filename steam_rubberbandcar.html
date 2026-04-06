@@ -88,6 +88,7 @@
         function App() {
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
           const bilibiliUrl = "https://www.bilibili.com/video/BV1Vi4y157y5";
+          const downloadUrl = "https://github.com/JOUCHUCHEN/maachiiknow/blob/main/steam/rubberbandcar/%E8%BF%B4%E5%8A%9B%E8%BB%8A.io";
 
           const handleNavAction = () => {
             const baseUrl = 'https://jouchuchen.github.io/machiknow/';
@@ -101,12 +102,14 @@
               <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                   <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
+                    {/* Logo: 保持 z-0 與 left-2 偏移 */}
                     <img 
                       src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
                       alt="MaachiiKonw Logo" 
-                      className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
+                      className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-2 z-0"
                     />
-                    <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
+                    {/* 文字: ml-3 保持原樣 */}
+                    <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-3">
                       Maachii<span className="text-orange-600">Konw</span>
                     </span>
                   </div>
@@ -156,21 +159,37 @@
                             </div>
                         </div>
 
-                        {/* 按鈕 */}
-                        <div className="mt-12 flex flex-col items-center gap-4">
-                          <div className="flex items-center gap-2 text-rose-500 text-[10px] font-black uppercase tracking-[0.3em] bg-rose-50 px-3 py-1 rounded-full">
-                            <Icon name="alert-circle" size={12} className="stroke-[3]" /> Playback Error?
+                        {/* 按鈕區域 */}
+                        <div className="mt-12 flex flex-col items-center gap-6">
+                          <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
+                            {/* Bilibili 按鈕 */}
+                            <a 
+                              href={bilibiliUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 text-base font-bold text-white px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-full shadow-[0_10px_30px_-10px_rgba(59,130,246,0.4)] transition-all hover:scale-105 active:scale-95 group w-full sm:w-auto justify-center"
+                            >
+                              <Icon name="tv" size={20} className="group-hover:animate-pulse" /> 
+                              Watch on Bilibili 
+                              <Icon name="external-link" size={16} className="opacity-70" />
+                            </a>
+
+                            {/* 下載按鈕 */}
+                            <a 
+                              href={downloadUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 text-base font-bold text-white px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 rounded-full shadow-[0_10px_30px_-10px_rgba(16,185,129,0.4)] transition-all hover:scale-105 active:scale-95 group w-full sm:w-auto justify-center"
+                            >
+                              <Icon name="download" size={20} className="group-hover:bounce" /> 
+                              Download .io File
+                              <Icon name="file-down" size={16} className="opacity-70" />
+                            </a>
                           </div>
-                          <a 
-                            href={bilibiliUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 text-base font-bold text-white px-12 py-5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-full shadow-[0_10px_40px_-10px_rgba(59,130,246,0.4)] transition-all hover:scale-105 active:scale-95 group"
-                          >
-                            <Icon name="tv" size={24} className="group-hover:animate-pulse" /> 
-                            Watch on Bilibili Player 
-                            <Icon name="external-link" size={18} className="opacity-70" />
-                          </a>
+
+                          <div className="flex items-center gap-2 text-rose-500 text-[10px] font-black uppercase tracking-[0.3em] bg-rose-50 px-3 py-1 rounded-full">
+                            <Icon name="alert-circle" size={12} className="stroke-[3]" /> Playback or Download Issues?
+                          </div>
                         </div>
 
                         {/* 資訊 */}
