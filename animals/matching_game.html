@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <!-- 音樂控制按鈕 (改為 absolute 讓他相對於 main 容器右上角，不被導航欄遮擋) -->
+        <!-- 音樂控制按鈕 -->
         <div class="absolute top-2 right-2 sm:top-4 sm:right-4 z-40">
             <button id="music-toggle" class="bg-white w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full shadow border-2 border-sky-200 hover:bg-sky-50 text-xl transition-colors no-select">
                 🔇
@@ -138,7 +138,7 @@
 
         <!-- 勝利視窗 (預設隱藏) -->
         <div id="win-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-            <div class="bg-white rounded-3xl p-8 max-w-sm text-center shadow-2xl transform scale-100 transition-transform">
+            <div class="bg-white rounded-3xl p-8 max-sm text-center shadow-2xl transform scale-100 transition-transform">
                 <div class="text-6xl mb-4">🎉</div>
                 <h2 class="text-3xl font-bold text-green-600 mb-2">Great Job!</h2>
                 <p class="text-lg text-gray-700 mb-6">You found all the animals!<br>It took you <span id="final-moves" class="font-bold text-amber-500"></span> moves.</p>
@@ -182,20 +182,21 @@
         const introModal = document.getElementById('intro-modal');
         const startBtn = document.getElementById('start-btn');
 
-        // 設定您指定的背景音樂與外部音效 (轉換為 Raw URL 以便讀取音檔)
+        // 背景音樂連結
         const bgMusic = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/amazing_animals_bgm.mp3');
         bgMusic.loop = true;
         
-        // 淡入效果與目標音量設定 (音量從 0.25 再降低 10% 變成 0.15)
+        // 淡入效果與目標音量設定
         const targetVolume = 0.15; 
-        bgMusic.volume = 0; // 初始音量設為 0 以便淡入
+        bgMusic.volume = 0; 
         let fadeInterval = null;
 
-        const matchSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/correct.mp3');
-        const errorSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/error.mp3');
-        const winSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/freesound_crunchpixstudio-purchase-success-384963.mp3');
+        // 特效音效連結
+        const matchSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/englishlearning/main/correct.mp3');
+        const errorSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/englishlearning/main/error.mp3');
+        const winSound = new Audio('https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/success.mp3');
 
-        // 初始化音效引擎 (僅用於翻牌的基礎特效音)
+        // 初始化音效引擎
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -205,7 +206,7 @@
             }
         }
 
-        // 彈奏單音 (基礎翻牌特效音使用)
+        // 彈奏單音 (基礎翻牌特效音)
         function playTone(freq, type, duration, vol) {
             if (!audioCtx || isMuted) return;
             const osc = audioCtx.createOscillator();
@@ -213,7 +214,6 @@
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             
-            // 設定音量漸弱，讓聲音圓潤不刺耳
             gain.gain.setValueAtTime(0, audioCtx.currentTime);
             gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.05);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
@@ -228,9 +228,9 @@
         function playSfx(type) {
             if (isMuted) return;
             if (type === 'flip') {
-                playTone(600, 'sine', 0.1, 0.05); // 翻牌：維持短促高音
+                playTone(600, 'sine', 0.1, 0.05); 
             } else if (type === 'match') {
-                matchSound.currentTime = 0; // 確保音效可以快速重複播放
+                matchSound.currentTime = 0; 
                 matchSound.play().catch(err => console.log("音效播放提示:", err.message));
             } else if (type === 'error') {
                 errorSound.currentTime = 0;
@@ -241,26 +241,25 @@
             }
         }
 
-        // 語音朗讀功能 (Text-to-Speech)
+        // 語音朗讀功能 (TTS)
         const speak = (text) => {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // 停止前一個未唸完的單字
+                window.speechSynthesis.cancel(); 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 0.85; // 稍微放慢語速，讓小朋友聽得更清楚
+                utterance.rate = 0.85; 
                 window.speechSynthesis.speak(utterance);
             }
         };
 
-        // 播放音樂並加入淡入效果 (Fade-in)
+        // 背景音樂淡入
         function playMusicWithFadeIn() {
-            bgMusic.volume = 0; // 確保從 0 開始
+            bgMusic.volume = 0; 
             const playPromise = bgMusic.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     if (fadeInterval) clearInterval(fadeInterval);
                     let vol = 0;
-                    // 每 100 毫秒增加音量，約 1 秒內平滑達到目標音量
                     fadeInterval = setInterval(() => {
                         if (isMuted) {
                             clearInterval(fadeInterval);
@@ -282,13 +281,13 @@
             }
         }
 
-        // 音樂開關控制
+        // 音樂開關
         musicToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // 避免觸發 body 的點擊事件
-            initAudio(); // 確保特效音引擎啟動
+            e.stopPropagation();
+            initAudio();
             isMuted = !isMuted;
             if (isMuted) {
-                if (fadeInterval) clearInterval(fadeInterval); // 停止淡入計時器
+                if (fadeInterval) clearInterval(fadeInterval);
                 bgMusic.pause();
                 musicToggle.textContent = '🔇';
             } else {
@@ -297,11 +296,10 @@
             }
         });
 
-        // 點擊 Start Game 按鈕後關閉對話框並啟動音樂
+        // 啟動按鈕
         startBtn.addEventListener('click', () => {
             introModal.classList.add('hidden');
-            initAudio(); // 確保特效音引擎啟動
-            
+            initAudio();
             if (isMuted) {
                 isMuted = false;
                 musicToggle.textContent = '🎵';
@@ -309,7 +307,7 @@
             }
         });
 
-        // 目標動物資料 (升級為 Twemoji 圖片連結，確保所有裝置都能正確顯示圖案與顏色，並保留 icon 作為備用)
+        // 動物清單
         const animalData = [
             { id: 'snake', name: 'Snake', icon: '🐍', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f40d.svg' },
             { id: 'crow', name: 'Crow', icon: '🐦‍⬛', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f426-200d-2b1b.svg' },
@@ -337,7 +335,6 @@
         const finalMovesEl = document.getElementById('final-moves');
         const toastContainer = document.getElementById('toast-container');
 
-        // 初始化遊戲
         function initGame() {
             gameBoard.innerHTML = '';
             winModal.classList.add('hidden');
@@ -349,36 +346,31 @@
             lockBoard = false;
             updateStats();
 
-            // 產生「圖像」與「文字」配對卡片
             cards = [];
             animalData.forEach(animal => {
                 cards.push({ id: animal.id, name: animal.name, icon: animal.icon, imgUrl: animal.imgUrl, type: 'image' });
                 cards.push({ id: animal.id, name: animal.name, icon: animal.icon, imgUrl: animal.imgUrl, type: 'text' });
             });
             
-            // 洗牌演算法 (Fisher-Yates Shuffle)
+            // 洗牌
             for (let i = cards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [cards[i], cards[j]] = [cards[j], cards[i]];
             }
 
-            // 建立卡片 DOM 元素
             cards.forEach((animal, index) => {
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('relative', 'w-full', 'h-full', 'cursor-pointer', 'no-select');
-                cardElement.dataset.id = animal.id; // 改用 id 進行配對
+                cardElement.dataset.id = animal.id; 
                 cardElement.dataset.name = animal.name;
 
-                // 內部容器 (控制 3D 翻轉)
                 const innerElement = document.createElement('div');
                 innerElement.classList.add('w-full', 'h-full', 'absolute', 'transform-style-3d', 'rounded-xl', 'shadow-md');
                 
-                // 卡片背面 (初始顯示面 - 草地/葉子圖案)
                 const cardBack = document.createElement('div');
                 cardBack.classList.add('w-full', 'h-full', 'absolute', 'backface-hidden', 'bg-gradient-to-br', 'from-emerald-400', 'to-green-600', 'rounded-xl', 'flex', 'items-center', 'justify-center', 'border-4', 'border-white', 'hover:opacity-90', 'transition-opacity');
                 cardBack.innerHTML = '<span class="text-3xl sm:text-4xl text-white opacity-50">🍃</span>';
 
-                // 卡片正面 (翻開後顯示面 - 根據 type 顯示圖片或文字，並加入圖片載入失敗時的備用機制)
                 const cardFront = document.createElement('div');
                 cardFront.classList.add('w-full', 'h-full', 'absolute', 'backface-hidden', 'rotate-y-180', 'bg-white', 'rounded-xl', 'flex', 'flex-col', 'items-center', 'justify-center', 'border-4', 'border-amber-300', 'p-1', 'sm:p-2', 'text-center');
                 
@@ -391,134 +383,98 @@
                 innerElement.appendChild(cardBack);
                 innerElement.appendChild(cardFront);
                 cardElement.appendChild(innerElement);
-
-                // 點擊事件
                 cardElement.addEventListener('click', () => flipCard(cardElement, innerElement));
-
                 gameBoard.appendChild(cardElement);
             });
         }
 
-        // 翻牌邏輯
         function flipCard(card, inner) {
             if (lockBoard) return;
-            if (card === firstCard) return; // 避免點擊同一張卡片
-            if (card.classList.contains('matched')) return; // 避免點擊已配對的卡片
+            if (card === firstCard) return; 
+            if (card.classList.contains('matched')) return; 
 
-            // 播放翻牌音效
             playSfx('flip');
-            
-            // 讀出相應的動物名字
-            if (!isMuted) {
-                speak(card.dataset.name);
-            }
-
-            // 執行翻轉動畫
+            if (!isMuted) speak(card.dataset.name);
             inner.classList.add('rotate-y-180');
 
             if (!firstCard) {
-                // 第一次點擊
                 firstCard = card;
                 return;
             }
 
-            // 第二次點擊
             secondCard = card;
             moves++;
             updateStats();
             checkForMatch();
         }
 
-        // 檢查是否配對成功
         function checkForMatch() {
-            // 改用 id 檢查是否配對 (圖案卡和文字卡有相同的 id)
             let isMatch = firstCard.dataset.id === secondCard.dataset.id;
-
             if (isMatch) {
-                let animalName = firstCard.dataset.name;
-                disableCards(animalName);
+                disableCards(firstCard.dataset.name);
             } else {
                 unflipCards();
             }
         }
 
-        // 配對成功：停用點擊並保持翻開
         function disableCards(animalName) {
             firstCard.classList.add('matched');
             secondCard.classList.add('matched');
-            
-            // 將卡片暫存到區域變數中，避免在計時器內讀取到被重設的 null 值
             const matchCard1 = firstCard;
             const matchCard2 = secondCard;
             
-            // 播放配對成功音效 (延遲 0.5 秒後播放，配合翻牌動畫)
-            setTimeout(() => {
-                playSfx('match');
-            }, 500);
+            // 配對延遲音效 (0.5s)
+            setTimeout(() => playSfx('match'), 500);
 
-            // 加上配對成功的視覺提示 (改變正面卡片的邊框與背景色)
             setTimeout(() => {
-                // 取得卡片的正面元素 (innerElement 的第二個子元素)
                 const front1 = matchCard1.firstElementChild.children[1];
                 const front2 = matchCard2.firstElementChild.children[1];
-                
-                // 將邊框改為綠色，並加上淺綠色背景
                 front1.classList.remove('border-amber-300', 'bg-white');
                 front1.classList.add('border-green-500', 'bg-green-50');
-                
                 front2.classList.remove('border-amber-300', 'bg-white');
                 front2.classList.add('border-green-500', 'bg-green-50');
 
                 matches++;
                 updateStats();
-                
-                // 觸發 AI 小知識功能
                 fetchAnimalFunFact(animalName);
                 
                 if (matches === animalData.length) {
                     setTimeout(showWinModal, 500);
                 }
             }, 300);
-
             resetBoard();
         }
 
-        // 配對失敗：將卡片翻回去
         function unflipCards() {
-            lockBoard = true; // 鎖定面板，防止點擊其他卡片
-            
-            // 播放配對失敗音效 (延遲 0.5 秒後播放，配合翻牌動畫)
-            setTimeout(() => {
-                playSfx('error');
-            }, 500);
-
+            lockBoard = true; 
+            // 配對失敗延遲音效 (0.5s)
+            setTimeout(() => playSfx('error'), 500);
             setTimeout(() => {
                 firstCard.firstElementChild.classList.remove('rotate-y-180');
                 secondCard.firstElementChild.classList.remove('rotate-y-180');
                 resetBoard();
-            }, 1000); // 等待1秒後翻回
+            }, 1000); 
         }
 
-        // 重置點擊狀態
         function resetBoard() {
             [firstCard, secondCard] = [null, null];
             lockBoard = false;
         }
 
-        // 更新計分板
         function updateStats() {
             movesEl.textContent = moves;
             matchesEl.textContent = matches;
         }
 
-        // 顯示勝利視窗
         function showWinModal() {
-            playSfx('win'); // 播放勝利音效
             finalMovesEl.textContent = moves;
             winModal.classList.remove('hidden');
+            // 延遲 0.3 秒後播放破關音效 (更新處)
+            setTimeout(() => {
+                playSfx('win');
+            }, 300);
         }
 
-        // 顯示 Toast 訊息
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-green-100 border-green-400 text-green-800' : 
@@ -526,76 +482,45 @@
                             'bg-blue-100 border-blue-400 text-blue-800';
                             
             toast.className = `p-4 rounded-xl shadow-lg border-2 ${bgColor} transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-auto flex items-center gap-3`;
-            toast.innerHTML = `
-                <span class="text-2xl">${type === 'success' ? '✨' : type === 'error' ? '❌' : '🤖'}</span>
-                <p class="font-bold text-sm sm:text-base">${message}</p>
-            `;
+            toast.innerHTML = `<span class="text-2xl">${type === 'success' ? '✨' : type === 'error' ? '❌' : '🤖'}</span><p class="font-bold text-sm sm:text-base">${message}</p>`;
             
             toastContainer.prepend(toast);
-            
-            // 動畫進入
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-            });
-
-            // 4秒後消失 (原本是 5 秒，縮減 1 秒)
+            requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
         }
 
-        // 使用 Gemini API 獲取動物冷知識
         async function fetchAnimalFunFact(animalName) {
             if (!apiKey) {
                 showToast(`Great! You found the ${animalName}!`, 'success');
                 return;
             }
-
             showToast(`Asking the AI teacher for a fun fact about ${animalName}...`, 'info');
-
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             const prompt = `Give a fun fact about the animal "${animalName}" for a 7-year-old child in English. Keep it under one short sentence, playful and cute, no introductory greetings.`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "You are an animal expert who is great at interacting with kids." }] }
-            };
+            const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: "You are an animal expert who is great at interacting with kids." }] } };
 
-            const maxRetries = 5;
             let retries = 0;
-            let delay = 1000;
-
-            while (retries < maxRetries) {
+            while (retries < 5) {
                 try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) throw new Error('API Request Failed');
-
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error('API Failed');
                     const data = await response.json();
                     const fact = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
                     if (fact) {
                         showToast(`🤖 AI Teacher says: ${fact}`, 'success');
                         return;
                     }
                 } catch (error) {
                     retries++;
-                    if (retries >= maxRetries) {
-                        showToast(`Oops, the AI teacher is a bit busy right now. Try again later for a fun fact about ${animalName}!`, 'error');
-                        return;
-                    }
-                    await new Promise(res => setTimeout(res, delay));
-                    delay *= 2; // Exponential backoff
+                    await new Promise(res => setTimeout(res, 1000 * Math.pow(2, retries - 1)));
                 }
             }
+            showToast(`Oops, AI is busy. Try again later for ${animalName}!`, 'error');
         }
 
-        // 網頁載入後立即啟動遊戲
         window.onload = initGame;
     </script>
 </body>
