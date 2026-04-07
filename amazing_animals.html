@@ -65,7 +65,7 @@
         import { 
           BookOpen, Download, ChevronRight, ArrowLeft, Volume2, 
           Hand, LayoutGrid, RotateCcw, Play, MonitorPlay, ChevronLeft, 
-          FileText, FileImage, Menu, X
+          FileText, FileImage, Menu, X, Lock
         } from 'lucide-react';
 
         const apiKey = ""; 
@@ -341,14 +341,51 @@
         }
 
         function AaDownloadsView({ onHome }) {
+          // 這裡配置 15 頁 PPT 的圖片網址
+          const slideUrls = [
+            "https://i.ibb.co/bjYZjv5X/1.png",
+            "https://i.ibb.co/709rzzP/2.png",
+            "https://i.ibb.co/kk6JHQs/3.png",
+            "https://i.ibb.co/CsHpG0yT/4.png",
+            "https://i.ibb.co/7x2xZchn/5.png",
+            "https://i.ibb.co/QvFRQmrD/6.png",
+            "https://i.ibb.co/7JjSNRhj/7.png",
+            "https://i.ibb.co/dd7mW1L/8.png",
+            "https://i.ibb.co/ZR2X8G9s/9.png",
+            "https://i.ibb.co/93T3Q2VX/10.png",
+            "https://i.ibb.co/V0Jcj6bH/11.png",
+            "https://i.ibb.co/60KnLN5q/12.png",
+            "https://i.ibb.co/7dds53mq/13.png",
+            "https://i.ibb.co/XkMBRkNx/14.png",
+            "https://i.ibb.co/FbWxMw0k/15.png"
+          ];
+
           const [slideIndex, setSlideIndex] = useState(0);
-          const slideUrls = ["https://i.ibb.co/YFGTvyp2/1.png", "https://i.ibb.co/3myx4BBH/2.png", "https://i.ibb.co/HDm9jRm4/3.png", "https://i.ibb.co/nMQmTqbN/4.png", "https://i.ibb.co/1YNMxSfK/5.png"];
+
           const handleDownload = (type) => {
             let url = "";
-            if (type === 'pdf') url = "https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/animals/Animal_Field_Guide.pdf";
-            else if (type === 'ppt') url = "https://github.com/JOUCHUCHEN/CurioCat/blob/main/animals/Animal_Field_Guide.pptx?raw=true";
-            window.open(url, '_blank');
+            let filename = "";
+            if (type === 'pdf') {
+              url = "https://raw.githubusercontent.com/JOUCHUCHEN/CurioCat/main/animals/Animal_Field_Guide.pdf";
+              filename = "Animal_Field_Guide.pdf";
+            } else if (type === 'ppt') {
+              url = "https://github.com/JOUCHUCHEN/CurioCat/blob/main/animals/Animal_Field_Guide.pptx?raw=true";
+              filename = "Animal_Field_Guide.pptx";
+            } else if (type === 'flashcards') {
+              url = "https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/animals/Flashcards.zip";
+              filename = "Flashcards.zip";
+            }
+            
+            // 使用原始直接下載寫法，避免瀏覽器攔截開啟新分頁
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           };
+
           return (
             <div className="flex flex-col h-full animate-in fade-in">
               <button onClick={onHome} className="p-3 bg-white text-orange-600 rounded-2xl shadow-sm border mb-6 w-12 active:scale-90 transition-all hover:bg-orange-50"><ArrowLeft size={24}/></button>
@@ -358,20 +395,42 @@
                     <h3 className="text-lg font-black flex items-center gap-3 text-gray-800 uppercase"><MonitorPlay size={24} className="text-orange-500" /> Preview</h3>
                     <span className="text-xs bg-orange-50 text-orange-600 px-4 py-1 rounded-full font-black">Slide {slideIndex + 1} / {slideUrls.length}</span>
                   </div>
-                  <div className="flex-1 bg-gray-950 rounded-[2rem] overflow-hidden relative flex items-center justify-center">
-                    <img src={slideUrls[slideIndex]} className="h-full w-full object-contain" alt="Preview" />
-                    <button onClick={() => setSlideIndex((prev) => (prev - 1 + slideUrls.length) % slideUrls.length)} className="absolute left-4 bg-black/40 p-3 rounded-full text-white"><ChevronLeft size={28} /></button>
-                    <button onClick={() => setSlideIndex((prev) => (prev + 1) % slideUrls.length)} className="absolute right-4 bg-black/40 p-3 rounded-full text-white"><ChevronRight size={28} /></button>
+                  
+                  {/* PPT 圖片預覽區域 */}
+                  <div className="flex-1 min-h-[300px] bg-gray-900 rounded-[2rem] border-[6px] md:border-[8px] border-gray-800 overflow-hidden relative shadow-inner group flex items-center justify-center">
+                    <img src={slideUrls[slideIndex]} className="h-full w-full object-contain transition-opacity duration-300" alt={`Preview Slide ${slideIndex + 1}`} />
+                    <button onClick={() => setSlideIndex((prev) => (prev - 1 + slideUrls.length) % slideUrls.length)} className="absolute left-4 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"><ChevronLeft size={28} /></button>
+                    <button onClick={() => setSlideIndex((prev) => (prev + 1) % slideUrls.length)} className="absolute right-4 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"><ChevronRight size={28} /></button>
+                    
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex-wrap justify-center px-4 w-full">
+                        {slideUrls.map((_, idx) => (
+                            <div key={idx} className={`h-1.5 rounded-full transition-all ${idx === slideIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/40'}`} />
+                        ))}
+                    </div>
                   </div>
                 </div>
-                <div className="w-full lg:w-1/3 bg-white rounded-[3rem] border p-8 flex flex-col items-center justify-center text-center shadow-sm">
-                  <div className="bg-orange-50 p-6 rounded-full mb-6 text-orange-500"><Download size={48} /></div>
-                  <h3 className="text-2xl font-black mb-6">Materials</h3>
-                  <div className="w-full space-y-3">
-                    <button onClick={() => handleDownload('ppt')} className="w-full bg-indigo-500 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-3 active:scale-95 transition-all"><MonitorPlay size={18} /> PPTX</button>
-                    <button onClick={() => handleDownload('pdf')} className="w-full bg-rose-500 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-3 active:scale-95 transition-all"><FileText size={18} /> PDF</button>
+                
+                {/* 修改處：將容器分為 3 份，左側 1/3 置中，右側 2/3 置中 */}
+                <div className="w-full lg:w-1/3 bg-white rounded-[3rem] border py-6 xl:py-8 flex flex-row items-center shadow-sm">
+                  {/* 修改處：圖標區塊加入 relative left-[5%] 向右平移，並透過 scale-110 將圖標與文字精準放大 10% */}
+                  <div className="w-1/3 flex flex-col items-center justify-center shrink-0 relative left-[5%]">
+                    <div className="scale-110 flex flex-col items-center transform origin-center">
+                      <div className="bg-orange-50 p-4 xl:p-5 rounded-full mb-3 text-orange-500 shadow-sm">
+                        <Download size={40} className="w-8 h-8 xl:w-10 xl:h-10" />
+                      </div>
+                      <h3 className="text-xl xl:text-2xl font-black text-gray-800 text-center tracking-tight">Materials</h3>
+                    </div>
+                  </div>
+
+                  {/* 按鈕區塊（佔 2/3 寬度，內容水平/垂直置中） */}
+                  <div className="w-2/3 flex flex-col items-center justify-center space-y-3">
+                    {/* 按鈕寬度設定為 75% */}
+                    <button onClick={() => handleDownload('ppt')} className="w-[75%] bg-indigo-500 text-white py-3 xl:py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md"><MonitorPlay size={18} /> PPTX</button>
+                    <button onClick={() => handleDownload('pdf')} className="w-[75%] bg-rose-500 text-white py-3 xl:py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md"><FileText size={18} /> PDF</button>
+                    <button onClick={() => handleDownload('flashcards')} className="w-[75%] bg-emerald-500 text-white py-3 xl:py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md"><FileImage size={18} /> Flashcards</button>
                   </div>
                 </div>
+
               </div>
             </div>
           );
