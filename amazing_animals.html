@@ -142,7 +142,7 @@
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full max-w-3xl px-6 mb-12">
                 <AaHomeCard icon={<BookOpen className="text-amber-500" />} title="Learn & Move" desc="Vocabulary & TPR Actions" color="bg-amber-50 border-amber-200" onClick={() => setModuleView('learn')} />
                 <AaHomeCard icon={<Hand className="text-rose-500" />} title="Listening Game" desc="Test Your Ears" color="bg-rose-50 border-rose-200" onClick={() => setModuleView('swatter')} />
-                <AaHomeCard icon={<LayoutGrid className="text-emerald-500" />} title="Matching Game" desc="Find the Pairs" color="bg-emerald-50 border-emerald-200" onClick={() => setModuleView('memory')} />
+                <AaHomeCard icon={<LayoutGrid className="text-emerald-500" />} title="Matching Game" desc="Find the Pairs" color="bg-emerald-50 border-emerald-200" onClick={() => window.location.href = 'animals/matching_game.html'} />
                 <AaHomeCard icon={<Download className="text-purple-500" />} title="Materials" desc="PPT & PDF Download" color="bg-purple-50 border-purple-200" onClick={() => setModuleView('downloads')} />
               </div>
 
@@ -340,124 +340,6 @@
           );
         }
 
-        const memoryAnimalData = [
-          { id: 'snake', name: 'Snake', icon: '🐍', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f40d.svg' },
-          { id: 'crow', name: 'Crow', icon: '🐦‍⬛', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f426-200d-2b1b.svg' },
-          { id: 'horse', name: 'Horse', icon: '🐴', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f434.svg' },
-          { id: 'dog', name: 'Dog', icon: '🐶', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f436.svg' },
-          { id: 'whale', name: 'Whale', icon: '🐳', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f433.svg' },
-          { id: 'elephant', name: 'Elephant', icon: '🐘', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f418.svg' },
-          { id: 'lion', name: 'Lion', icon: '🦁', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f981.svg' },
-          { id: 'human', name: 'Human', icon: '👦', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f466.svg' }, 
-          { id: 'seal', name: 'Seal', icon: '🦭', imgUrl: 'https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f9ad.svg' },
-          { id: 'eagle', name: 'Eagle', icon: '🦅', imgUrl: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f985.svg' }
-        ];
-
-        function AaMemoryGameView({ onHome }) {
-          const [cards, setCards] = useState([]);
-          const [flipped, setFlipped] = useState([]);
-          const [solved, setSolved] = useState([]);
-          const [disabled, setDisabled] = useState(false);
-          const [moves, setMoves] = useState(0);
-          const [matches, setMatches] = useState(0);
-          const [showIntro, setShowIntro] = useState(true);
-          const [showWin, setShowWin] = useState(false);
-
-          useEffect(() => { initGame(); }, []);
-
-          const initGame = () => {
-            setShowWin(false);
-            setMoves(0);
-            setMatches(0);
-            setFlipped([]);
-            setSolved([]);
-            setDisabled(false);
-            let gameCards = [];
-            memoryAnimalData.forEach(animal => {
-              gameCards.push({ ...animal, type: 'image', uid: Math.random().toString(36).substr(2, 9) });
-              gameCards.push({ ...animal, type: 'text', uid: Math.random().toString(36).substr(2, 9) });
-            });
-            setCards(shuffleArray(gameCards));
-          };
-
-          const handleCardClick = (index) => {
-            if (disabled || flipped.includes(index) || solved.includes(index)) return;
-            const newFlipped = [...flipped, index];
-            setFlipped(newFlipped);
-            if (newFlipped.length === 2) {
-              setDisabled(true);
-              setMoves(m => m + 1);
-              if (cards[newFlipped[0]].id === cards[newFlipped[1]].id) {
-                setSolved(prev => {
-                  const newSolved = [...prev, newFlipped[0], newFlipped[1]];
-                  setMatches(newSolved.length / 2);
-                  if (newSolved.length === cards.length) setShowWin(true);
-                  return newSolved;
-                });
-                setFlipped([]);
-                setDisabled(false);
-              } else {
-                setTimeout(() => {
-                  setFlipped([]);
-                  setDisabled(false);
-                }, 1000);
-              }
-            }
-          };
-
-          return (
-            <div className="flex flex-col h-full relative font-sans animate-in fade-in duration-500">
-              <button onClick={onHome} className="absolute top-0 left-0 p-3 bg-white text-orange-600 rounded-2xl shadow-sm border w-12 hover:bg-orange-50 active:scale-90 transition-all z-40"><ArrowLeft size={24}/></button>
-              {showIntro && (
-                <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-[60]">
-                  <div className="bg-white rounded-3xl p-8 max-w-md text-center shadow-2xl mx-4">
-                    <div className="text-6xl mb-4">🐾</div>
-                    <h2 className="text-3xl font-bold text-sky-600 mb-6">Memory Game!</h2>
-                    <button onClick={() => setShowIntro(false)} className="bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold py-3 px-8 rounded-full shadow-lg text-xl">Start Game</button>
-                  </div>
-                </div>
-              )}
-              {showWin && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[60]">
-                  <div className="bg-white rounded-3xl p-8 text-center shadow-2xl">
-                    <h2 className="text-3xl font-bold text-green-600 mb-6">Great Job! 🎉</h2>
-                    <button onClick={initGame} className="bg-green-500 text-white font-bold py-3 px-8 rounded-full">Play Again</button>
-                  </div>
-                </div>
-              )}
-              <div className="text-center mb-6 pt-2">
-                <h1 className="text-3xl font-bold text-amber-600 mb-2">Matching Game</h1>
-                <div className="flex justify-center gap-4 text-sky-800 font-bold">
-                  <span className="bg-white px-4 py-2 rounded-full border border-sky-200 shadow-sm">Moves: {moves}</span>
-                  <span className="bg-white px-4 py-2 rounded-full border border-sky-200 shadow-sm">Matches: {matches}/10</span>
-                </div>
-              </div>
-              <div className="flex-1 flex justify-center items-center pb-4 px-4 w-full">
-                <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 w-full max-w-4xl h-full perspective">
-                  {cards.map((card, index) => {
-                    const isFlipped = flipped.includes(index) || solved.includes(index);
-                    const isSolved = solved.includes(index);
-                    return (
-                      <div key={card.uid} onClick={() => handleCardClick(index)} className="relative w-full h-full cursor-pointer perspective">
-                        <div className={`w-full h-full absolute transform-style-3d rounded-xl shadow-md transition-all duration-500 ${isFlipped ? 'rotate-y-180' : ''}`}>
-                          <div className="w-full h-full absolute backface-hidden bg-gradient-to-br from-emerald-400 to-green-600 rounded-xl flex items-center justify-center border-4 border-white"><span className="text-4xl text-white opacity-50">🍃</span></div>
-                          <div className={`w-full h-full absolute backface-hidden rotate-y-180 rounded-xl flex flex-col items-center justify-center border-4 p-2 text-center ${isSolved ? 'border-green-500 bg-green-50' : 'border-amber-300 bg-white'}`}>
-                            {card.type === 'image' ? (
-                              <img src={card.imgUrl} alt={card.name} className="w-16 h-16 object-contain" />
-                            ) : (
-                              <span className="text-xl font-bold text-slate-800">{card.name}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
         function AaDownloadsView({ onHome }) {
           const [slideIndex, setSlideIndex] = useState(0);
           const slideUrls = ["https://i.ibb.co/YFGTvyp2/1.png", "https://i.ibb.co/3myx4BBH/2.png", "https://i.ibb.co/HDm9jRm4/3.png", "https://i.ibb.co/nMQmTqbN/4.png", "https://i.ibb.co/1YNMxSfK/5.png"];
@@ -500,12 +382,10 @@
           const [moduleView, setModuleView] = useState('home');
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-          // 導航到外部 index.html 的行為 (Logo 與 Navbar Home 鍵使用)
           const navigateToHome = () => {
             window.location.href = 'index.html';
           };
 
-          // --- Navbar Component ---
           const Navbar = () => (
             <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
               <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
@@ -513,18 +393,13 @@
                   <img 
                       src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
                       alt="MaachiiKonw Logo" 
-                      /* 修改處：w-16 h-16 放大尺寸，relative 配合 -top-1 與 left-2 進行微調 */
-                      /* 修改處：z-0 確保它在圖層最底層 */
                       className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
                    />
                    <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
-                     {/* 修改處：z-10 確保文字在 Logo 之上 */}
-                     {/* 修改處：ml-3 調整文字向左移動一個單位（從 ml-4 改為 ml-3） */}
                      Maachii<span className="text-orange-600">Konw</span>
                    </span>
                 </div>
                 
-                {/* Desktop Menu */}
                 <div className="hidden md:flex items-center space-x-12">
                   <button 
                     onClick={navigateToHome} 
@@ -534,7 +409,6 @@
                   </button>
                 </div>
 
-                {/* Mobile Menu Toggle */}
                 <button 
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
                   className="md:hidden text-gray-600 p-2"
@@ -543,7 +417,6 @@
                 </button>
               </div>
               
-              {/* Mobile Menu Overlay */}
               {isMobileMenuOpen && (
                 <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b md:hidden flex flex-col p-6 space-y-4 z-40 animate-in slide-in-from-top-2 duration-300">
                   <button 
@@ -562,11 +435,9 @@
                 <Navbar />
                 <main className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scroll p-4 md:p-6">
                   <div className="max-w-7xl mx-auto h-full">
-                    {/* 內部的模組切換邏輯 (返回本頁面選單) */}
                     {moduleView === 'home' && <AaHomeView setModuleView={setModuleView} />}
                     {moduleView === 'learn' && <AaLearnView onHome={() => setModuleView('home')} />}
                     {moduleView === 'swatter' && <AaSwatterGameView onHome={() => setModuleView('home')} />}
-                    {moduleView === 'memory' && <AaMemoryGameView onHome={() => setModuleView('home')} />}
                     {moduleView === 'downloads' && <AaDownloadsView onHome={() => setModuleView('home')} />}
                   </div>
                 </main>
