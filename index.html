@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MaachiiKnow - Creative Resource Hub</title>
     
-    <!-- 引入 Noto Sans TC 字體 -->
+    <!-- 引入 Roboto 與 Noto Sans TC (用於品牌) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        sans: ['"Roboto"', 'sans-serif'],
+                        brand: ['"Noto Sans TC"', 'sans-serif'],
                     }
                 }
             }
@@ -26,8 +27,9 @@
 
     <!-- 自訂 CSS -->
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; }
-        .brand-font { font-family: 'Noto Sans TC', sans-serif; font-weight: 900; }
+        body { font-family: 'Roboto', sans-serif; }
+        .font-brand { font-family: 'Noto Sans TC', sans-serif; font-weight: 900; }
+        
         .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f8fafc; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
@@ -61,12 +63,12 @@
 
         // --- STEM 課程資料 ---
         const stemProjects = [
-            { id: 'p1', title: 'LEGO Ping Pong Launcher', link: './steam_pingponglauncher.html', cover: 'https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png', desc: 'Transforming LEGO SPM mechanics into WeDo 2.0 system.', tags: ['SPM', 'Wedo 2.0'] },
-            { id: 'p2', title: 'LEGO 9686 SPM: Bow & Arrow', link: './steam_bow&arrow.html', cover: 'https://i.ibb.co/bjhp6x9d/image.png', desc: 'Mastering mechanical logic through high-precision LEGO construction.', tags: ['SPM']},
+            { id: 'p1', title: 'Ping Pong Launcher', link: './steam_pingponglauncher.html', cover: 'https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png', desc: 'From Mechanics to Robotic Systems', tags: ['SPM', 'Wedo 2.0'] },
+            { id: 'p2', title: 'Bow & Arrow', link: './steam_bow&arrow.html', cover: 'https://i.ibb.co/bjhp6x9d/image.png', desc: 'Mechanical structure & logic', tags: ['SPM']},
             { id: 2, title: 'Rubber Band Car', link: './steam_rubberbandcar.html', cover: 'https://i.ibb.co/LD5jgtpF/45.png', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 3, title: 'Gun', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 4, title: 'Tesla', desc: 'Mechanical structure & logic', tags: ['SPM'] },
-            { id: 6, title: 'Frog', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 6, title: 'Crazy Frog', link: './steam_crazyfrog.html', cover: 'https://i.ibb.co/Pz66fwj9/cover.jpg', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 7, title: 'Rebound LEGO Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 8, title: 'Pac-Man Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 9, title: 'Basic Crane Mechanism', desc: 'Mechanical structure & logic', tags: ['SPM'] },
@@ -92,7 +94,7 @@
             { id: 31, title: 'Quadrupedalism', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 33, title: 'Motorcycle', desc: 'Mechanical structure & logic', tags: ['SPM'] },
             { id: 34, title: 'Pathfinding Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
-            { id: 35, title: 'Alligator', desc: 'Mechanical structure & logic', tags: ['SPM'] },   
+            { id: 35, title: 'Alligator', desc: 'Mechanical structure & logic', tags: ['SPM'] },    
         ];
 
         // --- Bricks 渲染組件 ---
@@ -141,7 +143,7 @@
               <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                 <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('top')}>
                   <img src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1" />
-                  <span className="font-black text-3xl text-gray-900 tracking-tighter ml-0">Maachii<span className="text-orange-600">Know</span></span>
+                  <span className="font-brand text-3xl text-gray-900 tracking-tighter ml-0">Maachii<span className="text-orange-600">Know</span></span>
                 </div>
                 <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
                   <button onClick={() => scrollToSection('top')} className="font-bold text-sm lg:text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
@@ -176,9 +178,17 @@
                     <section id="elementary" className="mb-14">
                       <div className="flex items-center mb-6"><LayoutGrid className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Elementary English</h2></div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {/* Amazing Animals */}
                         <a href="./amazing_animals.html" target="_blank" className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
                           <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🦁</span></div>
                           <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 Amazing Animals</h3><p className="text-orange-50 text-xs opacity-90 font-bold">Interactive audio games & fun TPR activities</p></div>
+                          <div className="relative z-10 self-end mt-3"><div className="bg-white/20 p-2.5 rounded-full backdrop-blur-md"><ChevronRight size={20} /></div></div>
+                        </a>
+
+                        {/* Animal Texture */}
+                        <a href="./animal_texture.html" target="_blank" className="bg-gradient-to-br from-emerald-400 to-teal-800 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
+                          <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🐍</span></div>
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🌿 Animal Texture</h3><p className="text-emerald-50 text-xs opacity-90 font-bold">Touch and learn: Fur, Scales, and Feathers</p></div>
                           <div className="relative z-10 self-end mt-3"><div className="bg-white/20 p-2.5 rounded-full backdrop-blur-md"><ChevronRight size={20} /></div></div>
                         </a>
                       </div>
@@ -194,7 +204,6 @@
                     <section id="scratch" className="mb-14">
                       <div className="flex items-center mb-6"><Gamepad2 className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Scratch Interactive</h2></div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                        {/* 1. 貓翻翻樂 */}
                         <a href="./scratch_cat_match.html" target="_blank" className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
                           <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🐾 貓翻翻樂 (English)</h3><p className="text-yellow-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
@@ -202,7 +211,6 @@
                           </div>
                         </a>
                         
-                        {/* 2. What time is it? */}
                         <a href="./scratch_time_travel.html" target="_blank" className="bg-gradient-to-br from-violet-500 to-fuchsia-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
                           <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">What time is it?</h3><p className="text-violet-50 text-sm font-bold opacity-90 mt-1">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transition-all transform group-hover:scale-105 duration-700">
@@ -214,7 +222,6 @@
                           </div>
                         </a>
 
-                        {/* 3. 拍拍打怪獸 */}
                         <a href="./scratch_whack_monster.html" target="_blank" className="bg-gradient-to-br from-rose-500 to-red-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
                           <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🔨 拍拍打怪獸 (English)</h3><p className="text-rose-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
@@ -222,11 +229,10 @@
                           </div>
                         </a>
 
-                        {/* 4. What are you doing? */}
                         <a href="./scratch_what_are_you_doing.html" target="_blank" className="bg-gradient-to-br from-blue-400 to-cyan-600 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
                           <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">💬 What are you doing?</h3><p className="text-blue-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
-                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">🏃‍♂️</span>
+                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">跑</span>
                           </div>
                         </a>
                       </div>
@@ -240,14 +246,12 @@
                   </aside>
                 </main>
 
-               <footer className="bg-gray-900 text-white py-12 text-center shrink-0">
-                 <div className="max-w-7xl mx-auto px-4">
-                     <div className="brand-font flex items-center justify-center mb-6 text-2xl tracking-tighter uppercase">
-                       MaachiiKnow
-                      </div>
-                     <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
+                <footer className="bg-gray-900 text-white py-20 text-center mt-12">
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="mb-10 text-3xl font-brand tracking-tighter uppercase">MaachiiKnow</div>
+                    <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
                   </div>
-                 </footer>
+                </footer>
               </div>
             </div>
           );
