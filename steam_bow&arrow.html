@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEGO 9686 SPM: Bow & Arrow - STEAM Project</title>
     
-    <!-- 引入 Noto Sans TC 字體 -->
+    <!-- 引入 Roboto 與 Noto Sans TC 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,10 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        // 全局預設改為 Roboto
+                        sans: ['"Roboto"', 'sans-serif'],
+                        // 專門為 MaachiiKnow 保留的字體設定
+                        logo: ['"Noto Sans TC"', 'sans-serif'],
                     },
                     borderRadius: {
                         '4xl': '2rem',
@@ -31,7 +34,7 @@
     <!-- 自訂 CSS -->
     <style>
         body { 
-            font-family: 'Noto Sans TC', sans-serif;
+            font-family: 'Roboto', sans-serif;
             overflow: hidden; /* 防止整體 body 滾動 */
         }
         
@@ -71,7 +74,7 @@
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
         import { 
-          Youtube, ExternalLink, AlertCircle, Lightbulb, Rocket, PlayCircle, Menu, X
+            Youtube, ExternalLink, AlertCircle, Lightbulb, Rocket, PlayCircle, Menu, X
         } from 'lucide-react';
 
         // --- 共用元件：廣告版位 ---
@@ -100,15 +103,12 @@
                 <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
                   <img 
                       src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
-                      alt="MaachiiKonw Logo" 
-                      /* 修改處：w-16 h-16 放大尺寸，relative 配合 -top-1 與 left-2 進行微調 */
-                      /* 修改處：z-0 確保它在圖層最底層 */
+                      alt="MaachiiKnow Logo" 
                       className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
                    />
-                   <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
-                     {/* 修改處：z-10 確保文字在 Logo 之上 */}
-                     {/* 修改處：ml-3 調整文字向左移動一個單位（從 ml-4 改為 ml-3） */}
-                     Maachii<span className="text-orange-600">Konw</span>
+                   {/* 特別為 Logo 套用 font-logo 保留 Noto Sans TC */}
+                   <span className="font-logo font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
+                     Maachii<span className="text-orange-600">Know</span>
                    </span>
                 </div>
                 <div className="hidden md:flex items-center space-x-12">
@@ -207,10 +207,13 @@
 
                 <footer className="bg-gray-900 text-white py-12 text-center shrink-0 mt-auto">
                     <div className="max-w-7xl mx-auto px-4">
-                      <div className="flex items-center justify-center mb-6 text-2xl font-black tracking-tighter uppercase text-center">
-                        MaachiiKonw
+                      {/* 頁尾的 MaachiiKnow 標誌同樣套用 font-logo */}
+                      <div className="font-logo flex items-center justify-center mb-6 text-2xl font-black tracking-tighter uppercase text-center">
+                        MaachiiKnow
                       </div>
-                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase text-center">© 2026 MaachiiKonw. All rights reserved.</div>
+                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase text-center">
+                        © 2026 <span className="font-logo tracking-widest">MaachiiKnow</span>. All rights reserved.
+                      </div>
                     </div>
                 </footer>
               </div>
