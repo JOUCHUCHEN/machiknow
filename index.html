@@ -142,8 +142,15 @@
             <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
               <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                 <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('top')}>
-                  <img src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1" />
-                  <span className="font-brand text-3xl text-gray-900 tracking-tighter ml-0">Maachii<span className="text-orange-600">Know</span></span>
+                  {/* Logo: 使用 z-0 並確保相對定位 */}
+                  <img 
+                    src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
+                    className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative z-0 -top-1" 
+                  />
+                  {/* 文字: 使用 z-10 確保在 Logo 之上 */}
+                  <span className="font-brand text-3xl text-gray-900 tracking-tighter ml-0 relative z-10">
+                    Maachii<span className="text-orange-600">Know</span>
+                  </span>
                 </div>
                 <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
                   <button onClick={() => scrollToSection('top')} className="font-bold text-sm lg:text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
