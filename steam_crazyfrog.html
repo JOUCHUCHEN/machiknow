@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEGO 9686 SPM: Crazy Frog</title>
     
-    <!-- 引入 Noto Sans TC 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        // 全站預設改為 Roboto
+                        sans: ['"Roboto"', 'sans-serif'],
+                        // 保留給 MaachiiKonw 使用的品牌字體
+                        brand: ['"Noto Sans TC"', 'sans-serif'],
                     },
                     borderRadius: {
                         '4xl': '2rem',
@@ -28,10 +29,9 @@
         }
     </script>
 
-    <!-- 自訂 CSS -->
     <style>
         body { 
-            font-family: 'Noto Sans TC', sans-serif;
+            font-family: 'Roboto', sans-serif;
             overflow-x: hidden;
         }
         
@@ -54,12 +54,9 @@
         }
     </style>
 
-    <!-- 載入 React 核心 (更穩定的 CDN) -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- 載入 Lucide 圖示庫 -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- 載入 Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -88,12 +85,9 @@
         function App() {
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
           const bilibiliUrl = "https://www.bilibili.com/video/BV12gDjB7ELB/";
-          // 修改為 raw.githubusercontent.com 連結以進行直接下載
           const downloadUrl = "https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/steam/crazyfrog/%E9%9D%92%E8%9B%99(20240703%E4%BF%AE%E6%AD%A3).io";
 
           const handleNavAction = () => {
-            // 改用相對路徑的 index.html 邏輯 (往上兩層回到根目錄的首頁)
-            // 如果您將所有檔案放在同一個資料夾測試，請將其改為 'index.html' 即可
             window.top.location.href = '../../index.html';
             setIsMobileMenuOpen(false);
           };
@@ -104,14 +98,13 @@
               <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                   <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
-                    {/* Logo: 保持 z-0 與 left-2 偏移 */}
                     <img 
                       src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
                       alt="MaachiiKonw Logo" 
                       className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-2 z-0"
                     />
-                    {/* 文字: ml-3 保持原樣 */}
-                    <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-3">
+                    {/* 加入 font-brand 類別，保留特定字體 */}
+                    <span className="font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-3 font-brand">
                       Maachii<span className="text-orange-600">Konw</span>
                     </span>
                   </div>
@@ -177,7 +170,7 @@
                               <Icon name="external-link" size={16} className="opacity-70" />
                             </a>
 
-                            {/* 下載按鈕: 加上 download 屬性與修改過的 URL */}
+                            {/* 下載按鈕 */}
                             <a 
                               href={downloadUrl} 
                               target="_blank" 
@@ -219,10 +212,13 @@
 
                 <footer className="bg-gray-900 text-white py-12 text-center mt-auto">
                     <div className="max-w-7xl mx-auto px-4">
-                      <div className="flex items-center justify-center mb-6 text-2xl font-black tracking-tighter uppercase">
+                      {/* 加入 font-brand 類別，保留特定字體 */}
+                      <div className="flex items-center justify-center mb-6 text-2xl font-black tracking-tighter uppercase font-brand">
                         MaachiiKonw
                       </div>
-                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKonw. All rights reserved.</div>
+                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">
+                        © 2026 <span className="font-brand text-[10px]">MaachiiKonw</span>. All rights reserved.
+                      </div>
                     </div>
                 </footer>
               </div>
