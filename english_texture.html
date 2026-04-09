@@ -136,8 +136,10 @@
                 <div className="min-h-screen bg-sky-50 flex flex-col h-screen overflow-hidden">
                     <Navbar />
                     
-                    <main className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scroll p-4 md:p-6">
-                        <div className="max-w-7xl mx-auto h-full flex flex-col items-center justify-center text-center animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-full py-8">
+                    {/* 將 main 改為 flex-col 並修正內距，防止小螢幕被 Navbar 遮擋 */}
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scroll flex flex-col">
+                        {/* 移除 justify-center 改用 justify-start 與 pt-12 向下推擠空間 */}
+                        <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-start text-center animate-in fade-in slide-in-from-bottom-4 duration-700 flex-1 px-4 md:px-6 pt-12 md:pt-16 pb-8">
                             
                             <div className="flex gap-4 sm:gap-6 mb-8 animate-bounce justify-center">
                                 <span className="text-6xl sm:text-7xl emoji-shadow">🐍</span>
@@ -152,12 +154,13 @@
                             </p>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl px-4 sm:px-6 mb-12">
-                                <HomeCard icon={<MonitorPlay className="text-emerald-500" size={28} />} title="Texture Book" desc="LEARNING GALLERY" color="bg-emerald-50/50 border-emerald-200" targetUrl="texture/texture_book.html" />
-                                <HomeCard icon={<FlaskConical className="text-indigo-500" size={28} />} title="Texture Lab" desc="MATCHING EXPERIMENT" color="bg-indigo-50/50 border-indigo-200" targetUrl="texture/texture_lab.html" />
-                                <HomeCard icon={<Sparkles className="text-orange-500" size={28} />} title="Texture Quiz" desc="ANSWER THE CHALLENGES" color="bg-orange-50/50 border-orange-200" targetUrl="texture/texture_quiz.html" />
-                                <HomeCard icon={<Download className="text-purple-500" size={28} />} title="Materials" desc="PPT & WORKSHEETS" color="bg-purple-50/50 border-purple-200" targetUrl="texture/texture_materials.html" />
+                                <HomeCard icon={<MonitorPlay className="text-emerald-500" size={28} />} title="Texture Book" desc="LEARNING GALLERY" color="bg-emerald-50/50 border-emerald-200" targetUrl="texture_book.html" />
+                                <HomeCard icon={<FlaskConical className="text-indigo-500" size={28} />} title="Texture Lab" desc="MATCHING EXPERIMENT" color="bg-indigo-50/50 border-indigo-200" targetUrl="texture_lab.html" />
+                                <HomeCard icon={<Sparkles className="text-orange-500" size={28} />} title="Texture Quiz" desc="ANSWER THE CHALLENGES" color="bg-orange-50/50 border-orange-200" targetUrl="texture_quiz.html" />
+                                <HomeCard icon={<Download className="text-purple-500" size={28} />} title="Materials" desc="PPT & WORKSHEETS" color="bg-purple-50/50 border-purple-200" targetUrl="materials.html" />
                             </div>
 
+                            {/* mt-auto 確保廣告始終被推到底部 */}
                             <div className="mt-auto w-full max-w-3xl px-6">
                                 <AdBanner format="horizontal" />
                             </div>
