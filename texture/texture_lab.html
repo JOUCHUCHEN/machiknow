@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ArrowLeft, 
   RotateCcw, 
   CheckCircle2, 
   Info, 
-  Volume2, 
   Trophy,
   MousePointer2,
   Sparkles,
@@ -14,7 +13,7 @@ import {
   X
 } from 'lucide-react';
 
-// --- Data Constants ---
+// --- 資料常數 ---
 
 const TEXTURES = [
   { 
@@ -58,7 +57,7 @@ const TEXTURES = [
     name: 'Smooth Skin', 
     color: 'cyan', 
     icon: '🐬', 
-    desc: 'Skin without hair or scales, often found on aquatic mammals or amphibians.',
+    desc: 'Skin without hair or scales, often found on aquatic mammals.',
     bgColor: 'bg-cyan-50',
     borderColor: 'border-cyan-200',
     activeBorder: 'border-cyan-500',
@@ -82,7 +81,7 @@ const ANIMALS = [
   { id: 'elephant', name: 'Elephant', texture: 'smooth', emoji: '🐘', fact: 'Elephants have thick, wrinkled skin with very little hair.' }
 ];
 
-// --- Utilities ---
+// --- 工具函數 ---
 
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
@@ -96,7 +95,7 @@ const speak = (text) => {
   }
 };
 
-// --- Components ---
+// --- 組件 ---
 
 const FeedbackToast = ({ message, type }) => {
   if (!message) return null;
@@ -117,7 +116,7 @@ export default function App() {
   const [lastFact, setLastFact] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Initialize Game
+  // 初始化遊戲
   const initGame = useCallback(() => {
     setShuffledAnimals(shuffleArray(ANIMALS));
     setMatchedIds(new Set());
@@ -130,7 +129,7 @@ export default function App() {
     initGame();
   }, [initGame]);
 
-  // Handle Feedback timeouts
+  // 處理反饋訊息自動消失
   useEffect(() => {
     if (feedback.message) {
       const timer = setTimeout(() => setFeedback({ message: '', type: '' }), 2000);
@@ -138,7 +137,7 @@ export default function App() {
     }
   }, [feedback]);
 
-  // Navigation functions
+  // 導航功能
   const navigateToHome = () => {
     window.location.href = '/index.html';
   };
@@ -150,7 +149,7 @@ export default function App() {
   const handleAnimalClick = (animal) => {
     if (!selectedTexture) {
       speak("Select a texture first!");
-      setFeedback({ message: 'Choose a texture first!', type: 'error' });
+      setFeedback({ message: '請先選擇一個質感！', type: 'error' });
       return;
     }
 
@@ -165,10 +164,10 @@ export default function App() {
       newMatched.add(animal.id);
       setMatchedIds(newMatched);
       setLastFact(animal.fact);
-      setFeedback({ message: 'Correct!', type: 'success' });
+      setFeedback({ message: '正確！', type: 'success' });
       speak(`Excellent! The ${animal.name} has ${selectedTexture.name}. ${animal.fact}`);
     } else {
-      setFeedback({ message: 'Try again!', type: 'error' });
+      setFeedback({ message: '再試一次！', type: 'error' });
       speak(`Not quite. Try finding another animal with ${selectedTexture.name}.`);
     }
   };
@@ -177,7 +176,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen bg-sky-50 font-sans overflow-hidden text-slate-800">
-      {/* Navbar - Strictly following user design */}
+      {/* 導航欄 - 嚴格遵循使用者設計 */}
       <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
         <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
           <div className="flex items-center cursor-pointer group" onClick={navigateToHome}>
@@ -220,10 +219,10 @@ export default function App() {
         )}
       </nav>
 
-      {/* Main Content */}
+      {/* 主要內容區域 */}
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden p-4 md:p-6 gap-6">
         
-        {/* Sidebar: Selection & Info */}
+        {/* 側邊欄：質感選擇與資訊 */}
         <aside className="w-full md:w-80 flex flex-col gap-4 shrink-0 overflow-y-auto no-scrollbar pb-4">
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
             <button 
@@ -233,7 +232,7 @@ export default function App() {
               <ArrowLeft size={20} /> Back
             </button>
 
-            <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
               <Search size={14} /> 1. Select a Texture
             </h2>
             
@@ -270,9 +269,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* Progress / Fact Box */}
+          {/* 探索日誌 / 事實方框 */}
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex-1">
-            <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
               <Info size={14} /> Discovery Log
             </h2>
             
@@ -294,7 +293,7 @@ export default function App() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
                 <MousePointer2 size={32} className="mb-2 text-slate-300" />
-                <p className="text-xs font-bold uppercase tracking-tight text-slate-400">Select a texture and match an animal to see facts!</p>
+                <p className="text-[10px] font-bold uppercase tracking-tight text-slate-400">Select a texture and match an animal to see facts!</p>
               </div>
             )}
           </div>
@@ -307,10 +306,10 @@ export default function App() {
           </button>
         </aside>
 
-        {/* Game Grid */}
+        {/* 遊戲網格 */}
         <section className="flex-1 flex flex-col min-w-0">
           <header className="flex items-center justify-between mb-4 px-2">
-             <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+             <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                <Sparkles size={14} /> 2. Match the Animals
              </h2>
              {selectedTexture && (
@@ -357,7 +356,7 @@ export default function App() {
         </section>
       </main>
 
-      {/* Game Complete Modal */}
+      {/* 遊戲完成彈窗 */}
       {isGameComplete && (
         <div className="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-500">
           <div className="bg-white rounded-[4rem] p-10 md:p-16 text-center max-w-lg w-full shadow-2xl border-[12px] border-orange-50 relative overflow-hidden">
@@ -369,8 +368,8 @@ export default function App() {
                 <Trophy size={48} className="text-orange-500" />
               </div>
               
-              <h2 className="text-5xl font-black text-slate-800 mb-4 tracking-tighter leading-none">
-                LAB COMPLETE!
+              <h2 className="text-5xl font-black text-slate-800 mb-4 tracking-tighter leading-none uppercase">
+                Lab Complete!
               </h2>
               <p className="text-lg font-medium text-slate-500 mb-10">
                 You've successfully identified all {ANIMALS.length} animal textures. You're a true biologist!
@@ -395,14 +394,14 @@ export default function App() {
         </div>
       )}
 
-      {/* Footer - Strictly following user design */}
+      {/* 頁腳 - 嚴格遵循使用者設計 */}
       <footer className="bg-white/80 backdrop-blur-sm border-t py-4 text-center shrink-0">
         <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em]">
           © 2026 MaachiiKnow. All rights reserved.
         </p>
       </footer>
 
-      {/* Global Toast Feedback */}
+      {/* 全域反饋提示 */}
       <FeedbackToast message={feedback.message} type={feedback.type} />
 
       <style>{`
