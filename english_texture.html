@@ -3,19 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materials - MaachiiKnow</title>
+    <title>Animal Textures - MaachiiKnow</title>
+    
+    <!-- 引入 Noto Sans TC (Logo使用) 與 Roboto (全站使用) 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        logo: ['"Noto Sans TC"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 遊戲與 UI 所需的自訂 CSS -->
     <style>
-        .font-sans { font-family: 'Roboto', sans-serif; }
-        .font-logo { font-family: 'Noto Sans TC', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        body { font-family: 'Roboto', sans-serif; }
         .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f0f9ff; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #bae6fd; border-radius: 20px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #7dd3fc; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } 
+        .no-scrollbar::-webkit-scrollbar { display: none; } 
+        @keyframes bounce-slow { 
+            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); } 
+            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } 
+        }
+        .animate-bounce-slow { animation: bounce-slow 3s infinite; }
+        .emoji-shadow { filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.15)); }
     </style>
+
+    <!-- Import Maps -->
     <script type="importmap">
     {
         "imports": {
@@ -27,79 +54,125 @@
     </script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-sky-50 h-screen overflow-hidden font-sans">
+<body class="bg-sky-50 h-screen overflow-hidden">
     <div id="root" class="h-full"></div>
+
     <script type="text/babel" data-type="module">
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { ArrowLeft, Menu, X, MonitorPlay, ChevronLeft, ChevronRight, Download, FileText, FileImage } from 'lucide-react';
+        import { MonitorPlay, FlaskConical, Sparkles, Download, Menu, X } from 'lucide-react';
 
-        const slideUrls = [
-          "https://i.ibb.co/Lh2g0Lzr/1.png", "https://i.ibb.co/Pz3Mxr0h/2.png", "https://i.ibb.co/rTgB29B/3.png", 
-          "https://i.ibb.co/JFjXkvY0/4.png", "https://i.ibb.co/YFQj5VyL/5.png", "https://i.ibb.co/jvSdDjqh/6.png", 
-          "https://i.ibb.co/R4C41YYB/7.png", "https://i.ibb.co/N6zWb7Kg/8.png", "https://i.ibb.co/Xfhv6vmR/9.png", 
-          "https://i.ibb.co/fzxvYRsb/10.png", "https://i.ibb.co/hRJ01Rr9/11.png", "https://i.ibb.co/BKTxp1gX/12.png", 
-          "https://i.ibb.co/5WNRFNRP/13.png"
-        ];
+        const AdBanner = ({ format = 'horizontal', className = "" }) => (
+            <div className={`relative flex items-center justify-center bg-sky-100/50 border-2 border-dashed border-sky-200 text-sky-400 rounded-lg overflow-hidden ${format === 'horizontal' ? 'w-full h-20 my-2' : 'w-full aspect-square max-h-[250px] my-4'} ${className}`}>
+                <span className="absolute top-1 right-2 text-[10px] bg-sky-200 text-sky-600 px-1 rounded uppercase tracking-tighter font-black">AD Space</span>
+                <p className="font-bold text-xs uppercase tracking-widest">ADVERTISEMENT (728 x 90)</p>
+            </div>
+        );
+
+        const HomeCard = ({ icon, title, desc, color, targetUrl }) => (
+            <button 
+                onClick={() => window.location.href = targetUrl} 
+                className={`${color} border-2 rounded-[2rem] p-4 sm:p-5 text-left flex items-center gap-4 transition-all hover:scale-[1.03] active:scale-95 group shadow-sm w-full`}
+            >
+                <div className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm group-hover:rotate-6 transition-transform flex-shrink-0">
+                    {icon}
+                </div>
+                <div>
+                    <h3 className="text-lg sm:text-xl font-black text-gray-800 leading-tight">{title}</h3>
+                    <p className="text-[10px] sm:text-[11px] text-gray-500 font-bold mt-1 uppercase tracking-wider">{desc}</p>
+                </div>
+            </button>
+        );
 
         function App() {
-          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-          const [slideIndex, setSlideIndex] = useState(0);
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const navigateToHome = () => { window.location.href = 'index.html'; };
 
-          const handleDownload = (type) => {
-            const urls = {
-              pdf: "https://github.com/JOUCHUCHEN/maachiiknow/blob/main/texture/Animal_Texture_Lab(13p).pdf?raw=true",
-              ppt: "https://github.com/JOUCHUCHEN/maachiiknow/blob/main/texture/Animal_Texture_Lab(13p)(20MB).pptx?raw=true"
-            };
-            const link = document.createElement('a');
-            link.href = urls[type];
-            link.target = '_blank';
-            link.click();
-          };
+            const Navbar = () => (
+                <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
+                    <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+                        <div className="flex items-center cursor-pointer group" onClick={navigateToHome}>
+                            <img 
+                                src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
+                                alt="Maachiiknow Logo" 
+                                className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
+                            />
+                            <span className="font-logo font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
+                                Maachii<span className="text-orange-600">Know</span>
+                            </span>
+                        </div>
+                        
+                        <div className="hidden md:flex items-center space-x-12">
+                            <button 
+                                onClick={navigateToHome} 
+                                className="font-bold text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors"
+                            >
+                                Home
+                            </button>
+                        </div>
 
-          return (
-            <div className="flex flex-col h-full">
-              <nav className="bg-white shadow-sm h-20 border-b shrink-0 z-50 sticky top-0">
-                <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
-                  <div className="flex items-center cursor-pointer group" onClick={() => window.location.href='index.html'}>
-                    <img src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" alt="Logo" className="w-16 h-16 group-hover:rotate-6 transition-all" />
-                    <span className="font-logo font-black text-3xl text-gray-900 tracking-tighter">Maachii<span className="text-orange-600">Know</span></span>
-                  </div>
-                  <button onClick={() => window.location.href='index.html'} className="hidden md:block font-bold text-gray-500 hover:text-orange-600 tracking-widest uppercase transition-colors">Home</button>
-                  <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2">{isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}</button>
-                </div>
-              </nav>
-
-              <main className="flex-1 overflow-y-auto relative custom-scroll p-4 md:p-6">
-                <div className="max-w-7xl mx-auto h-full flex flex-col animate-in fade-in">
-                  <button onClick={() => window.location.href='index.html'} className="p-3 bg-white text-orange-600 rounded-2xl shadow-sm border mb-6 w-12"><ArrowLeft size={24}/></button>
-                  
-                  <div className="flex flex-col lg:flex-row gap-8">
-                    <div className="w-full lg:w-2/3 bg-white rounded-[3rem] border p-8 shadow-sm">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-black flex items-center gap-3 text-gray-800 uppercase"><MonitorPlay size={24} className="text-orange-500" /> Preview</h3>
-                        <span className="text-xs bg-orange-50 text-orange-600 px-4 py-1 rounded-full font-bold">Slide {slideIndex + 1} / 13</span>
-                      </div>
-                      <div className="aspect-video bg-gray-900 rounded-[2rem] overflow-hidden relative group flex items-center justify-center border-8 border-gray-800 shadow-inner">
-                        <img src={slideUrls[slideIndex]} className="h-full object-contain" alt="Preview Slide" />
-                        <button onClick={() => setSlideIndex(i => (i - 1 + 13) % 13)} className="absolute left-4 bg-white/80 p-3 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"><ChevronLeft /></button>
-                        <button onClick={() => setSlideIndex(i => (i + 1) % 13)} className="absolute right-4 bg-white/80 p-3 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"><ChevronRight /></button>
-                      </div>
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                            className="md:hidden text-gray-600 p-2"
+                        >
+                            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        </button>
                     </div>
                     
-                    <div className="w-full lg:w-1/3 bg-white rounded-[3rem] border p-8 flex flex-col items-center justify-center gap-6 shadow-sm">
-                      <div className="bg-orange-50 p-6 rounded-full text-orange-500 animate-pulse"><Download size={48} /></div>
-                      <h3 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">Materials</h3>
-                      <div className="flex flex-col w-full gap-3">
-                        <button onClick={() => handleDownload('ppt')} className="w-full bg-indigo-500 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 transition-transform active:scale-95"><MonitorPlay size={18} /> PPTX Presentation</button>
-                        <button onClick={() => handleDownload('pdf')} className="w-full bg-rose-500 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 transition-transform active:scale-95"><FileText size={18} /> PDF Worksheet</button>
-                      </div>
-                    </div>
-                  </div>
+                    {isMobileMenuOpen && (
+                        <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b md:hidden flex flex-col p-6 space-y-4 z-40 animate-in slide-in-from-top-2 duration-300">
+                            <button 
+                                onClick={navigateToHome} 
+                                className="text-left font-bold text-gray-700"
+                            >
+                                Home
+                            </button>
+                        </div>
+                    )}
+                </nav>
+            );
+
+            return (
+                <div className="min-h-screen bg-sky-50 flex flex-col h-screen overflow-hidden">
+                    <Navbar />
+                    
+                    {/* 將 main 改為 flex-col 並修正內距，防止小螢幕被 Navbar 遮擋 */}
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scroll flex flex-col">
+                        {/* 縮小上下內距與元素間距，讓四個選項能集中在一個畫面內 */}
+                        <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-start text-center animate-in fade-in slide-in-from-bottom-4 duration-700 flex-1 px-4 md:px-6 pt-6 md:pt-8 pb-4">
+                            
+                            <div className="flex gap-4 sm:gap-6 mb-4 animate-bounce justify-center">
+                                <span className="text-5xl sm:text-6xl emoji-shadow">🐍</span>
+                                <span className="text-5xl sm:text-6xl emoji-shadow">🐦</span>
+                                <span className="text-5xl sm:text-6xl emoji-shadow">🦁</span>
+                                <span className="text-5xl sm:text-6xl emoji-shadow">🐬</span>
+                            </div>
+                            
+                            <h2 className="text-3xl sm:text-4xl font-black text-sky-900 mb-2 tracking-tight">Animal Textures!</h2>
+                            {/* 將 max-w-sm 改為 max-w-2xl 確保文字可以在一行顯示 */}
+                            <p className="text-sm sm:text-base text-sky-700/80 mb-6 max-w-2xl font-bold leading-relaxed mx-auto px-4">
+                                Explore animal textures, learn vocabulary, and play games!
+                            </p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4 sm:px-6 mb-6">
+                                <HomeCard icon={<MonitorPlay className="text-emerald-500" size={26} />} title="Texture Book" desc="LEARNING GALLERY" color="bg-emerald-50/50 border-emerald-200" targetUrl="texture_book.html" />
+                                <HomeCard icon={<FlaskConical className="text-indigo-500" size={26} />} title="Texture Lab" desc="MATCHING EXPERIMENT" color="bg-indigo-50/50 border-indigo-200" targetUrl="texture_lab.html" />
+                                <HomeCard icon={<Sparkles className="text-orange-500" size={26} />} title="Texture Quiz" desc="ANSWER THE CHALLENGES" color="bg-orange-50/50 border-orange-200" targetUrl="texture_quiz.html" />
+                                <HomeCard icon={<Download className="text-purple-500" size={26} />} title="Materials" desc="PPT & WORKSHEETS" color="bg-purple-50/50 border-purple-200" targetUrl="materials.html" />
+                            </div>
+
+                            {/* mt-auto 確保廣告始終被推到底部 */}
+                            <div className="mt-auto w-full max-w-3xl px-6">
+                                <AdBanner format="horizontal" />
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer className="bg-white/80 backdrop-blur-sm border-t py-4 text-center shrink-0">
+                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em]">© 2026 MaachiiKnow. All rights reserved.</p>
+                    </footer>
                 </div>
-              </main>
-            </div>
-          );
+            );
         }
 
         const root = createRoot(document.getElementById('root'));
