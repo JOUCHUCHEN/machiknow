@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal Textures - MaachiiKnow</title>
+    <title>MaachiiKnow - Creative Resource Hub</title>
     
-    <!-- 引入 Noto Sans TC (Logo使用) 與 Roboto (全站使用) 字體 -->
+    <!-- 引入 Roboto 與 Noto Sans TC (用於品牌) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,29 +17,25 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Roboto', 'sans-serif'],
-                        logo: ['"Noto Sans TC"', 'sans-serif'],
+                        sans: ['"Roboto"', 'sans-serif'],
+                        brand: ['"Noto Sans TC"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
 
-    <!-- 遊戲與 UI 所需的自訂 CSS -->
+    <!-- 自訂 CSS -->
     <style>
         body { font-family: 'Roboto', sans-serif; }
+        .font-brand { font-family: 'Noto Sans TC', sans-serif; font-weight: 900; }
+        
         .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f0f9ff; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #bae6fd; border-radius: 20px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #7dd3fc; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } 
-        .no-scrollbar::-webkit-scrollbar { display: none; } 
-        @keyframes bounce-slow { 
-            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); } 
-            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } 
-        }
-        .animate-bounce-slow { animation: bounce-slow 3s infinite; }
-        .emoji-shadow { filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.15)); }
+        .custom-scroll::-webkit-scrollbar-track { background: #f8fafc; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        
+        a { text-decoration: none; display: block; }
     </style>
 
     <!-- Import Maps -->
@@ -52,130 +48,216 @@
         }
     }
     </script>
+
+    <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-sky-50 h-screen overflow-hidden">
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- React 掛載點 -->
     <div id="root" class="h-full"></div>
 
     <script type="text/babel" data-type="module">
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { MonitorPlay, FlaskConical, Sparkles, Download, Menu, X } from 'lucide-react';
+        import { Menu, LayoutGrid, Rocket, ChevronRight, Youtube, PlayCircle, Gamepad2, Wrench } from 'lucide-react';
 
-        const AdBanner = ({ format = 'horizontal', className = "" }) => (
-            <div className={`relative flex items-center justify-center bg-sky-100/50 border-2 border-dashed border-sky-200 text-sky-400 rounded-lg overflow-hidden ${format === 'horizontal' ? 'w-full h-20 my-2' : 'w-full aspect-square max-h-[250px] my-4'} ${className}`}>
-                <span className="absolute top-1 right-2 text-[10px] bg-sky-200 text-sky-600 px-1 rounded uppercase tracking-tighter font-black">AD Space</span>
-                <p className="font-bold text-xs uppercase tracking-widest">ADVERTISEMENT (728 x 90)</p>
-            </div>
-        );
+        // --- STEM 課程資料 (已重新排序) ---
+        const stemProjects = [
+            { id: 'p2', title: 'Bow & Arrow', link: './steam_bow&arrow.html', cover: 'https://i.ibb.co/bjhp6x9d/image.png', desc: 'Mechanical structure & logic', tags: ['SPM', 'Basic']},
+            { id: 2, title: 'Rubber Band Car', link: './steam_rubberbandcar.html', cover: 'https://i.ibb.co/LD5jgtpF/45.png', desc: 'Mechanical structure & logic', tags: ['SPM', 'Basic'] },
+            { id: 6, title: 'Crazy Frog', link: './steam_crazyfrog.html', cover: 'https://i.ibb.co/Pz66fwj9/cover.jpg', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 23, title: 'Auto Grabber', link: './steam_autograbber.html', cover: 'https://i.ibb.co/V0c4fgDf/IMG-2482.jpg', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 'p1', title: 'Ping Pong Launcher', link: './steam_pingponglauncher.html', cover: 'https://i.ibb.co/dsnqrs3k/Ping-Pong-Ball-Machine-Wedo2.png', desc: 'From Mechanics to Robotic Systems', tags: ['SPM', 'Wedo 2.0'] },
+            { id: 3, title: 'Gun', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 4, title: 'Tesla', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 7, title: 'Rebound LEGO Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 8, title: 'Pac-Man Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 9, title: 'Basic Crane Mechanism', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 10, title: 'Snail', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 11, title: 'Machine Gun', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 12, title: 'Kayak', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 14, title: 'Power Driller', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 15, title: 'Supercharged Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 17, title: 'Sailboat', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 18, title: 'Swing', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 19, title: 'Catapult', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 20, title: 'Whale', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 21, title: 'Fishing Rod', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 22, title: 'Crane', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 24, title: 'Motorcycle with Rubber Band', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 25, title: 'Hammer', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 26, title: 'Jet', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 27, title: 'Bird', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 28, title: 'Boxing', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 29, title: 'Paperplane Shooter', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 30, title: 'Balance Scale', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 31, title: 'Quadrupedalism', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 33, title: 'Motorcycle', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 34, title: 'Pathfinding Car', desc: 'Mechanical structure & logic', tags: ['SPM'] },
+            { id: 35, title: 'Alligator', desc: 'Mechanical structure & logic', tags: ['SPM'] },    
+        ];
 
-        const HomeCard = ({ icon, title, desc, color, targetUrl }) => (
-            <button 
-                onClick={() => window.location.href = targetUrl} 
-                className={`${color} border-2 rounded-[2rem] p-6 text-left flex items-center gap-5 transition-all hover:scale-[1.03] active:scale-95 group shadow-sm w-full`}
-            >
-                <div className="bg-white p-4 rounded-2xl shadow-sm group-hover:rotate-6 transition-transform flex-shrink-0">
-                    {icon}
-                </div>
-                <div>
-                    <h3 className="text-xl font-black text-gray-800 leading-tight">{title}</h3>
-                    <p className="text-[12px] text-gray-500 font-bold mt-1 uppercase tracking-wider">{desc}</p>
-                </div>
-            </button>
-        );
+        // --- Bricks 渲染組件 ---
+        const StemProjectsGrid = () => {
+            const themes = ["from-teal-600 to-emerald-900", "from-violet-600 to-purple-900", "from-slate-600 to-gray-900", "from-blue-600 to-indigo-900"];
+            return (
+                <React.Fragment>
+                    {stemProjects.map((project, index) => {
+                        const themeClass = themes[index % 4];
+                        return (
+                            <a key={project.id} href={project.link || `./stem_l1_u1_${project.id}.html`} target="_blank" rel="noopener noreferrer" className={`bg-gradient-to-br ${themeClass} rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-xl min-h-[16.5rem]`}>
+                                <div className="w-full h-36 rounded-2xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
+                                    {project.cover ? <img src={project.cover} className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500" /> : <span className="text-[6rem]">⚙️</span>}
+                                </div>
+                                <div className="relative z-10 flex-1 flex flex-col">
+                                    <h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">{project.title}</h3>
+                                    <p className="text-white/80 text-xs font-medium line-clamp-2 mb-2 opacity-90">{project.desc}</p>
+                                    <div className="mt-auto flex flex-wrap gap-2">
+                                        {project.tags.map((tag) => (
+                                            <div key={tag} className="flex items-center text-[10px] font-black uppercase tracking-widest bg-black/30 w-fit px-2.5 py-1 rounded-lg backdrop-blur-md">
+                                                <span className={tag === 'SPM' ? 'text-yellow-300' : 'text-cyan-300'}>{tag}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </a>
+                        );
+                    })}
+                </React.Fragment>
+            );
+        };
 
         function App() {
-            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-            const navigateToHome = () => { window.location.href = 'index.html'; };
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+          const scrollToSection = (sectionId) => {
+            const element = document.getElementById(sectionId);
+            if (element) element.scrollIntoView({ behavior: 'smooth' });
+            setIsMobileMenuOpen(false);
+          };
 
-            const Navbar = () => (
-                <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
-                    <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
-                        <div className="flex items-center cursor-pointer group" onClick={navigateToHome}>
-                            <img 
-                                src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
-                                alt="Maachiiknow Logo" 
-                                className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative -top-1 left-0 z-0"
-                            />
-                            <span className="font-logo font-black text-3xl text-gray-900 tracking-tighter relative z-10 ml-0">
-                                Maachii<span className="text-orange-600">Know</span>
-                            </span>
-                        </div>
-                        
-                        <div className="hidden md:flex items-center space-x-12">
-                            <button 
-                                onClick={navigateToHome} 
-                                className="font-bold text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors"
-                            >
-                                Home
-                            </button>
-                        </div>
-
-                        <button 
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-                            className="md:hidden text-gray-600 p-2"
-                        >
-                            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                        </button>
-                    </div>
-                    
-                    {isMobileMenuOpen && (
-                        <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b md:hidden flex flex-col p-6 space-y-4 z-40 animate-in slide-in-from-top-2 duration-300">
-                            <button 
-                                onClick={navigateToHome} 
-                                className="text-left font-bold text-gray-700"
-                            >
-                                Home
-                            </button>
-                        </div>
-                    )}
-                </nav>
-            );
-
-            return (
-                <div className="min-h-screen bg-sky-50 flex flex-col h-screen overflow-hidden">
-                    <Navbar />
-                    
-                    {/* 將 main 改為 flex-col 並修正內距，防止小螢幕被 Navbar 遮擋 */}
-                    <main className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scroll flex flex-col">
-                        {/* 移除 justify-center 改用 justify-start 與 pt-12 向下推擠空間 */}
-                        <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-start text-center animate-in fade-in slide-in-from-bottom-4 duration-700 flex-1 px-4 md:px-6 pt-12 md:pt-16 pb-8">
-                            
-                            <div className="flex gap-4 sm:gap-6 mb-8 animate-bounce justify-center">
-                                <span className="text-6xl sm:text-7xl emoji-shadow">🐍</span>
-                                <span className="text-6xl sm:text-7xl emoji-shadow">🐦</span>
-                                <span className="text-6xl sm:text-7xl emoji-shadow">🦁</span>
-                                <span className="text-6xl sm:text-7xl emoji-shadow">🐬</span>
-                            </div>
-                            
-                            <h2 className="text-4xl font-black text-sky-900 mb-4 tracking-tight">Animal Textures!</h2>
-                            <p className="text-base text-sky-700/80 mb-12 max-w-sm font-bold leading-relaxed mx-auto px-4">
-                                Explore animal textures, learn vocabulary, and play games!
-                            </p>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl px-4 sm:px-6 mb-12">
-                                <HomeCard icon={<MonitorPlay className="text-emerald-500" size={28} />} title="Texture Book" desc="LEARNING GALLERY" color="bg-emerald-50/50 border-emerald-200" targetUrl="texture_book.html" />
-                                <HomeCard icon={<FlaskConical className="text-indigo-500" size={28} />} title="Texture Lab" desc="MATCHING EXPERIMENT" color="bg-indigo-50/50 border-indigo-200" targetUrl="texture_lab.html" />
-                                <HomeCard icon={<Sparkles className="text-orange-500" size={28} />} title="Texture Quiz" desc="ANSWER THE CHALLENGES" color="bg-orange-50/50 border-orange-200" targetUrl="texture_quiz.html" />
-                                <HomeCard icon={<Download className="text-purple-500" size={28} />} title="Materials" desc="PPT & WORKSHEETS" color="bg-purple-50/50 border-purple-200" targetUrl="materials.html" />
-                            </div>
-
-                            {/* mt-auto 確保廣告始終被推到底部 */}
-                            <div className="mt-auto w-full max-w-3xl px-6">
-                                <AdBanner format="horizontal" />
-                            </div>
-                        </div>
-                    </main>
-
-                    <footer className="bg-white/80 backdrop-blur-sm border-t py-4 text-center shrink-0">
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em]">© 2026 MaachiiKnow. All rights reserved.</p>
-                    </footer>
+          const Navbar = () => (
+            <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
+              <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+                <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('top')}>
+                  <img 
+                    src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
+                    className="w-16 h-16 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all relative z-0 -top-1" 
+                  />
+                  <span className="font-brand text-3xl text-gray-900 tracking-tighter ml-0 relative z-10">
+                    Maachii<span className="text-orange-600">Know</span>
+                  </span>
                 </div>
-            );
+                <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
+                  <button onClick={() => scrollToSection('top')} className="font-bold text-sm lg:text-base text-gray-500 hover:text-orange-600 uppercase tracking-widest transition-colors">Home</button>
+                  <button onClick={() => scrollToSection('elementary')} className="text-gray-500 font-bold text-sm lg:text-base hover:text-orange-600 uppercase tracking-widest transition-colors">ENGLISH</button>
+                  <button onClick={() => scrollToSection('steam')} className="text-gray-500 font-bold text-sm lg:text-base hover:text-orange-600 uppercase tracking-widest transition-colors">Bricks</button>
+                  <button onClick={() => scrollToSection('scratch')} className="text-gray-500 font-bold text-sm lg:text-base hover:text-orange-600 uppercase tracking-widest transition-colors">Scratch</button>
+                </div>
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2"><Menu size={28} /></button>
+              </div>
+            </nav>
+          );
+
+          return (
+            <div className="min-h-screen bg-gray-50 flex flex-col h-screen overflow-hidden">
+              <Navbar />
+              <div className="flex-1 overflow-y-auto custom-scroll">
+                <div id="top" className="max-w-7xl mx-auto px-4 pt-4">
+                  <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg overflow-hidden w-full h-20 my-2">
+                    <span className="absolute top-1 right-2 text-[10px] bg-gray-200 text-gray-500 px-1 rounded uppercase font-bold">AD Space</span>
+                    <p className="font-semibold text-xs">728 x 90</p>
+                  </div>
+                </div>
+                
+                <header className="max-w-7xl mx-auto px-4 py-6 text-center">
+                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight">Creative Resource Hub</h1>
+                  <p className="text-gray-500 text-base md:text-lg font-bold max-w-3xl mx-auto opacity-80">Providing free, professional English and STEAM teaching resources for educators worldwide.</p>
+                </header>
+
+                <main className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-10">
+                  <div className="lg:w-4/5">
+                    {/* ENGLISH Section */}
+                    <section id="elementary" className="mb-14">
+                      <div className="flex items-center mb-6"><LayoutGrid className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Elementary English</h2></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {/* Amazing Animals */}
+                        <a href="./english_animals.html" target="_blank" className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
+                          <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🦁</span></div>
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 Amazing Animals</h3><p className="text-orange-50 text-xs opacity-90 font-bold">Interactive audio games & fun TPR activities</p></div>
+                        </a>
+
+                        {/* Animal Texture */}
+                        <a href="./english_texture.html" target="_blank" className="bg-gradient-to-br from-emerald-400 to-teal-800 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
+                          <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🐍</span></div>
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🌿 Animal Texture</h3><p className="text-emerald-50 text-xs opacity-90 font-bold">Touch and learn: Fur, Scales, and Feathers</p></div>
+                        </a>
+                      </div>
+                    </section>
+
+                    {/* Bricks & Robotics Section */}
+                    <section id="steam" className="mb-14">
+                      <div className="flex items-center mb-6"><Rocket className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Bricks & Robotics</h2></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"><StemProjectsGrid /></div>
+                    </section>
+
+                    {/* Scratch Interactive Section */}
+                    <section id="scratch" className="mb-14">
+                      <div className="flex items-center mb-6"><Gamepad2 className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Scratch Interactive</h2></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <a href="./scratch_cat_match.html" target="_blank" className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🐾 貓翻翻樂 (English)</h3><p className="text-yellow-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                          <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
+                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">🐱</span>
+                          </div>
+                        </a>
+                        
+                        <a href="./scratch_time_travel.html" target="_blank" className="bg-gradient-to-br from-violet-500 to-fuchsia-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">What time is it?</h3><p className="text-violet-50 text-sm font-bold opacity-90 mt-1">Time Expressions Game</p></div>
+                          <div className="mb-0 flex justify-center transition-all transform group-hover:scale-105 duration-700">
+                            <div className="bg-gray-900 p-1.5 rounded-[1.8rem] shadow-2xl border border-gray-700/50 ring-1 ring-white/10">
+                                <div className="rounded-[1.2rem] overflow-hidden bg-black flex items-center justify-center w-40 h-24">
+                                    <img src="https://i.ibb.co/G43S36BY/time-cover.png" className="w-full h-full object-contain" />
+                                </div>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a href="./scratch_whack_monster.html" target="_blank" className="bg-gradient-to-br from-rose-500 to-red-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🔨 拍拍打怪獸 (English)</h3><p className="text-rose-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                          <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
+                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">👾</span>
+                          </div>
+                        </a>
+
+                        <a href="./scratch_what_are_you_doing.html" target="_blank" className="bg-gradient-to-br from-blue-400 to-cyan-600 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">💬 What are you doing?</h3><p className="text-blue-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                          <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
+                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">跑</span>
+                          </div>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+
+                  <aside className="lg:w-1/5">
+                    <div className="sticky top-24 flex flex-col gap-4">
+                      <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg w-full aspect-square max-h-[250px]"><span className="absolute top-1 right-2 text-[10px] font-bold">AD Space</span><p className="font-semibold text-xs">300 x 250</p></div>
+                    </div>
+                  </aside>
+                </main>
+
+                <footer className="bg-gray-900 text-white py-20 text-center mt-12">
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="mb-10 text-3xl font-brand tracking-tighter uppercase">MaachiiKnow</div>
+                    <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          );
         }
 
-        const root = createRoot(document.getElementById('root'));
-        root.render(<App />);
+        createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
