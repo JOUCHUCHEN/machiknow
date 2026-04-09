@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Textures - MaachiiKnow</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        .font-sans { 
+            font-family: 'Roboto', sans-serif; 
+        }
+        .font-logo { 
+            font-family: 'Noto Sans TC', sans-serif; 
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f0f9ff; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #bae6fd; border-radius: 20px; }
+        
+        @keyframes bounce-slow { 
+            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); } 
+            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } 
+        }
+        .animate-bounce-slow { animation: bounce-slow 3s infinite; }
+        
+        /* Drop shadow for the animal emojis to match the design */
+        .emoji-shadow {
+            filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.15));
+        }
+    </style>
+
+    <!-- React & Imports -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0"
+        }
+    }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-sky-50 h-screen overflow-hidden font-sans">
+    <div id="root" class="h-full"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            MonitorPlay, FlaskConical, Sparkles, Download, Menu, X 
+        } from 'lucide-react';
+
+        // --- Card Component ---
+        const HomeCard = ({ icon, title, desc, color, targetUrl }) => (
+            <button 
+                onClick={() => window.location.href = targetUrl} 
+                className={`${color} border-2 rounded-[2rem] p-6 text-left flex items-center gap-5 transition-all hover:scale-[1.03] active:scale-95 group shadow-sm w-full font-sans`}
+            >
+                <div className="bg-white p-4 rounded-2xl shadow-sm group-hover:rotate-6 transition-transform flex-shrink-0">
+                    {icon}
+                </div>
+                <div>
+                    <h3 className="text-xl font-black text-gray-800 leading-tight">{title}</h3>
+                    <p className="text-[12px] text-gray-500 font-bold mt-1 uppercase tracking-wider">{desc}</p>
+                </div>
+            </button>
+        );
+
+        // --- Main App Component ---
+        function App() {
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+            return (
+                <div className="flex flex-col h-full">
+                    {/* Navbar */}
+                    <nav className="bg-white shadow-sm h-20 border-b shrink-0 z-50 sticky top-0">
+                        <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+                            <div className="flex items-center cursor-pointer group" onClick={() => window.location.reload()}>
+                                <img src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" alt="Logo" className="w-16 h-16 group-hover:rotate-6 transition-all" />
+                                <span className="font-logo font-black text-3xl text-gray-900 tracking-tighter">
+                                    Maachii<span className="text-orange-600">Know</span>
+                                </span>
+                            </div>
+                            <div className="hidden md:flex items-center space-x-12">
+                                <button className="font-bold text-gray-500 hover:text-orange-600 tracking-widest uppercase transition-colors text-roboto">
+                                    Home
+                                </button>
+                            </div>
+                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-gray-600 p-2">
+                                {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                            </button>
+                        </div>
+                        {isMobileMenuOpen && (
+                            <div className="absolute top-20 left-0 w-full bg-white shadow-xl border-b p-6 flex flex-col space-y-4 md:hidden animate-in slide-in-from-top-2">
+                                <button className="text-left font-bold text-gray-700 text-roboto">Home</button>
+                            </div>
+                        )}
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="flex-1 overflow-y-auto relative custom-scroll p-4 md:p-6">
+                        <div className="flex flex-col items-center justify-center text-center animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-[80vh] w-full py-8">
+                            
+                            {/* Animated Animal Emojis */}
+                            <div className="flex gap-4 sm:gap-6 mb-8 animate-bounce justify-center">
+                                <span className="text-6xl sm:text-7xl emoji-shadow">🐍</span>
+                                <span className="text-6xl sm:text-7xl emoji-shadow">🐦</span>
+                                <span className="text-6xl sm:text-7xl emoji-shadow">🦁</span>
+                                <span className="text-6xl sm:text-7xl emoji-shadow">🐬</span>
+                            </div>
+                            
+                            {/* Headings */}
+                            <h2 className="text-4xl font-black text-sky-900 mb-4 tracking-tight">Animal Textures!</h2>
+                            <p className="text-base text-sky-700/80 mb-12 max-w-sm font-bold leading-relaxed mx-auto px-4">
+                                Explore animal textures, learn vocabulary, and play games!
+                            </p>
+                            
+                            {/* Grid Menu linking to separate pages */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl px-4 sm:px-6 mb-12">
+                                <HomeCard 
+                                    icon={<MonitorPlay className="text-emerald-500" size={28} />} 
+                                    title="Texture Book" 
+                                    desc="LEARNING GALLERY" 
+                                    color="bg-emerald-50/50 border-emerald-200" 
+                                    targetUrl="texture_book.html" 
+                                />
+                                <HomeCard 
+                                    icon={<FlaskConical className="text-indigo-500" size={28} />} 
+                                    title="Texture Lab" 
+                                    desc="MATCHING EXPERIMENT" 
+                                    color="bg-indigo-50/50 border-indigo-200" 
+                                    targetUrl="texture_lab.html" 
+                                />
+                                <HomeCard 
+                                    icon={<Sparkles className="text-orange-500" size={28} />} 
+                                    title="Texture Quiz" 
+                                    desc="ANSWER THE CHALLENGES" 
+                                    color="bg-orange-50/50 border-orange-200" 
+                                    targetUrl="texture_quiz.html" 
+                                />
+                                <HomeCard 
+                                    icon={<Download className="text-purple-500" size={28} />} 
+                                    title="Materials" 
+                                    desc="PPT & WORKSHEETS" 
+                                    color="bg-purple-50/50 border-purple-200" 
+                                    targetUrl="materials.html" 
+                                />
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-white/80 backdrop-blur-sm border-t py-4 text-center shrink-0">
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em]">
+                            © 2026 MaachiiKnow. All rights reserved.
+                        </p>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
