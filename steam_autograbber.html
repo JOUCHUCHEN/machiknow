@@ -15,9 +15,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // 全站預設改為 Roboto
                         sans: ['"Roboto"', 'sans-serif'],
-                        // 保留給 MaachiiKnow 使用的品牌字體
                         brand: ['"Noto Sans TC"', 'sans-serif'],
                     },
                     borderRadius: {
@@ -32,7 +30,7 @@
     <style>
         body { 
             font-family: 'Roboto', sans-serif;
-            overflow: hidden; /* 防止整個網頁出現預設滾動條，讓滾動條只出現在內容區 */
+            overflow: hidden;
         }
         
         /* 滾動條樣式優化 */
@@ -52,6 +50,11 @@
             display: flex;
             flex-direction: column;
         }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -65,7 +68,6 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
         
-        // --- 簡易 Lucide 圖示組件 ---
         const Icon = ({ name, size = 24, className = "" }) => {
             useEffect(() => {
                 if (window.lucide) {
@@ -84,16 +86,17 @@
 
         function App() {
           const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-          const bilibiliUrl = "https://www.bilibili.com/video/BV12gDjB7ELB/";
+          const bilibiliUrl = "https://www.bilibili.com/video/BV1sbDsBMEob/";
           const downloadUrl = "https://raw.githubusercontent.com/JOUCHUCHEN/maachiiknow/main/steam/autograbber/Auto_Grabber.io";
+          
           const handleNavAction = () => {
-            window.top.location.href = '../../index.html';
+            // 在獨立檔案中，如果沒有外層 index.html，可視需求調整
+            console.log("Navigating to home...");
             setIsMobileMenuOpen(false);
           };
 
           return (
             <div className="flex flex-col h-screen font-sans">
-              {/* 導覽列 (移除 sticky，因為外層已固定高度) */}
               <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
                   <div className="flex items-center cursor-pointer group" onClick={handleNavAction}>
@@ -121,14 +124,12 @@
                 )}
               </nav>
 
-              {/* 內容區塊 (滾動條會限制在這裡面) */}
               <div className="flex-1 overflow-y-auto custom-scroll">
                 <main className="w-full">
                     <div className="p-6 lg:p-10 max-w-6xl mx-auto w-full flex flex-col">
                         
-                        {/* Header 區塊 */}
                         <div className="mb-10 text-left">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3">LEGO 9686 SPM: Auto Grabber</h2>
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3">LEGO 9686 SPM: Crazy Frog</h2>
                             <div className="flex items-center justify-start gap-2 text-slate-400 font-bold tracking-wider uppercase text-xs">
                                 <Icon name="play-circle" size={14} className="text-orange-500" />
                                 <span>STEAM Project Learning</span>
@@ -137,20 +138,24 @@
                             </div>
                         </div>
 
-                        {/* Video Frame (Bilibili) */}
                         <div className="w-full relative group">
                             <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-rose-500 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition duration-1000"></div>
                             <div className="relative bg-white p-3 md:p-4 rounded-[3.5rem] shadow-2xl border border-slate-100">
                                 <div className="aspect-video w-full bg-slate-900 rounded-[2.5rem] overflow-hidden relative shadow-inner video-container">
-                                    <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116373615417961&bvid=BV1sbDsBMEob&cid=37359782457&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+                                    <iframe 
+                                      src="//player.bilibili.com/player.html?isOutside=true&bvid=BV1sbDsBMEob&p=1&autoplay=0" 
+                                      scrolling="no" 
+                                      border="0" 
+                                      frameBorder="no" 
+                                      framespacing="0" 
+                                      allowFullScreen={true}
+                                    ></iframe>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 按鈕區域 */}
                         <div className="mt-12 flex flex-col items-center gap-6">
                           <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
-                            {/* Bilibili 按鈕 */}
                             <a 
                               href={bilibiliUrl} 
                               target="_blank" 
@@ -162,7 +167,6 @@
                               <Icon name="external-link" size={16} className="opacity-70" />
                             </a>
 
-                            {/* 下載按鈕 */}
                             <a 
                               href={downloadUrl} 
                               target="_blank" 
@@ -181,7 +185,6 @@
                           </div>
                         </div>
 
-                        {/* 資訊 */}
                         <div className="mt-16 mb-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
                           <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group">
                              <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
@@ -202,14 +205,14 @@
                     </div>
                 </main>
 
-                  <footer className="bg-gray-900 text-white py-12 text-center shrink-0">
-                    <div className="max-w-7xl mx-auto px-4">
-                      <div className="brand-font flex items-center justify-center mb-6 text-2xl tracking-tighter uppercase">
-                        MaachiiKnow
-                      </div>
-                      <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
+                <footer className="bg-gray-900 text-white py-12 text-center shrink-0">
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="font-brand flex items-center justify-center mb-6 text-2xl tracking-tighter uppercase font-bold">
+                      MaachiiKnow
                     </div>
-                  </footer>
+                    <div className="pt-6 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
+                  </div>
+                </footer>
               </div>
             </div>
           );
