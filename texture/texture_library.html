@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Texture Book - MaachiiKnow</title>
+    <title>Texture Library - MaachiiKnow</title>
     
     <!-- 引入 Noto Sans TC (Logo使用) 與 Roboto (全站使用) 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,20 +121,20 @@
         const ANIMALS = [
           { id: 'snake', name: 'Snake', texture: 'scales', emoji: '🐍', desc: 'Snakes have dry and hard scales.' }, 
           { id: 'fish', name: 'Fish', texture: 'scales', emoji: '🐟', desc: 'Fish have shiny and wet scales.' }, 
-          { id: 'crocodile', name: 'Crocodile', texture: 'scales', emoji: '🐊', desc: 'Crocodiles have very hard scales.' },
-          { id: 'lizard', name: 'Lizard', texture: 'scales', emoji: '🦎', desc: 'Lizards have small and dry scales.' },
-          { id: 'eagle', name: 'Eagle', texture: 'feathers', emoji: '🦅', desc: 'Eagles have strong feathers for flying.' }, 
-          { id: 'crow', name: 'Crow', texture: 'feathers', emoji: '🐦‍⬛', desc: 'Crows have black and shiny feathers.' }, 
-          { id: 'parrot', name: 'Parrot', texture: 'feathers', emoji: '🦜', desc: 'Parrots have colorful feathers.' },
-          { id: 'owl', name: 'Owl', texture: 'feathers', emoji: '🦉', desc: 'Owls have very soft feathers.' },
-          { id: 'dog', name: 'Dog', texture: 'fur', emoji: '🐶', desc: 'Dogs are our furry best friends.' }, 
-          { id: 'lion', name: 'Lion', texture: 'fur', emoji: '🦁', desc: 'Lions have thick and warm fur.' }, 
-          { id: 'horse', name: 'Horse', texture: 'fur', emoji: '🐴', desc: 'Horses have short and smooth fur.' },
-          { id: 'panda', name: 'Panda', texture: 'fur', emoji: '🐼', desc: 'Pandas have thick black and white fur.' },
-          { id: 'whale', name: 'Whale', texture: 'skin', emoji: '🐳', desc: 'Whales have smooth skin.' }, 
-          { id: 'dolphin', name: 'Dolphin', texture: 'skin', emoji: '🐬', desc: 'Dolphins have very smooth skin for swimming fast.' }, 
-          { id: 'frog', name: 'Frog', texture: 'skin', emoji: '🐸', desc: 'Frogs have smooth and wet skin.' },
-          { id: 'elephant', name: 'Elephant', texture: 'skin', emoji: '🐘', desc: 'Elephants have rough and thick skin. Elephant skin is not smooth!' }
+          { id: 'crocodile', name: 'Crocodile', texture: 'scales', emoji: '🐊', image: 'https://i.ibb.co/Ng3L4Xw2/miniformat65-nile-crocodile-245013-1920.jpg', desc: 'Crocodiles have very hard scales.' },
+          { id: 'lizard', name: 'Lizard', texture: 'scales', emoji: '🦎', image: 'https://i.ibb.co/SwT4hFnB/pavanprasad-ind-lizard-9076520-1920.jpg', desc: 'Lizards have small and dry scales.' },
+          { id: 'eagle', name: 'Eagle', texture: 'feathers', emoji: '🦅', image: 'https://i.ibb.co/5gVzdnGc/stacyvitallo-eagle-1029909-1920.jpg', desc: 'Eagles have strong feathers for flying.' }, 
+          { id: 'crow', name: 'Crow', texture: 'feathers', emoji: '🐦‍⬛', image: 'https://i.ibb.co/kgBKWdwG/chiemseherin-raven-bird-3696515-1920.jpg', desc: 'Crows have black and shiny feathers.' }, 
+          { id: 'parrot', name: 'Parrot', texture: 'feathers', emoji: '🦜', image: 'https://i.ibb.co/v4SmBfMV/beckytregear-bird-4728857-1920.jpg', desc: 'Parrots have colorful feathers.' },
+          { id: 'owl', name: 'Owl', texture: 'feathers', emoji: '🦉', image: 'https://i.ibb.co/gZWtxzYh/iulian-ursache-great-horned-owl-5463688-1920.jpg', desc: 'Owls have very soft feathers.' },
+          { id: 'dog', name: 'Dog', texture: 'fur', emoji: '🐶', image: 'https://i.ibb.co/Mykm32YH/enirehtacess-border-collie-4449956-1920.jpg', desc: 'Dogs are our furry best friends.' }, 
+          { id: 'lion', name: 'Lion', texture: 'fur', emoji: '🦁', image: 'https://i.ibb.co/SXHL39W5/ambquinn-lion-7573939-1280.jpg', desc: 'Lions have thick and warm fur.' }, 
+          { id: 'horse', name: 'Horse', texture: 'fur', emoji: '🐴', image: 'https://i.ibb.co/r28tcFMz/richardpics-horse-4530644-1280.jpg', desc: 'Horses have short and smooth fur.' },
+          { id: 'panda', name: 'Panda', texture: 'fur', emoji: '🐼', image: 'https://i.ibb.co/JRzTXdx2/995645-panda-3875426-1280.jpg', desc: 'Pandas have thick black and white fur.' },
+          { id: 'whale', name: 'Whale', texture: 'skin', emoji: '🐳', image: 'https://i.ibb.co/35bv6dgB/fitschen-whale-1302757-1280.jpg', desc: 'Whales have smooth skin.' }, 
+          { id: 'dolphin', name: 'Dolphin', texture: 'skin', emoji: '🐬', image: 'https://i.ibb.co/h1ZsPBxk/werdepate-dolphin-2709809-1280.jpg', desc: 'Dolphins have very smooth skin for swimming fast.' }, 
+          { id: 'frog', name: 'Frog', texture: 'skin', emoji: '🐸', image: 'https://i.ibb.co/vvqWjKtZ/garten-gg-animals-4322025-1280.jpg', desc: 'Frogs have smooth and wet skin.' },
+          { id: 'elephant', name: 'Elephant', texture: 'skin', emoji: '🐘', image: 'https://i.ibb.co/JwRvB1YZ/jbauer-fotographie-elephant-3832516-1920.jpg', desc: 'Elephants have rough and thick skin. Elephant skin is not smooth!' }
         ];
 
         const speak = (text) => {
@@ -221,7 +221,7 @@
                         <ArrowLeft size={28} />
                       </button>
                       <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
-                        <BookOpen className="text-emerald-500" /> Texture Book
+                        <BookOpen className="text-emerald-500" /> Texture Library
                       </h2>
                       <div className="w-12"></div>
                     </div>
@@ -298,9 +298,16 @@
                                   }}
                                 >
                                   <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-orange-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                  <div className="text-5xl sm:text-6xl mb-3 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10">
-                                    {animal.emoji}
+                                  
+                                  {/* 更新列表顯示邏輯：如果有圖片則顯示圖片，否則顯示 emoji */}
+                                  <div className="mb-3 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10 flex justify-center">
+                                    {animal.image ? (
+                                      <img src={animal.image} alt={animal.name} className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-full shadow-sm border-2 border-white" />
+                                    ) : (
+                                      <span className="text-5xl sm:text-6xl">{animal.emoji}</span>
+                                    )}
                                   </div>
+
                                   <div className="text-lg sm:text-xl font-black text-slate-700 tracking-tighter relative z-10">{animal.name}</div>
                                   <div className="mt-3 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-40 group-hover:opacity-100 group-hover:bg-orange-100 transition-all">
                                     <Volume2 size={16} className="text-slate-400 group-hover:text-orange-600" />
@@ -355,9 +362,15 @@
                             </button>
 
                             <div className="flex flex-col items-center text-center">
-                                <div className="text-8xl sm:text-9xl mb-6 animate-bounce-slow">
-                                    {activeAnimal.emoji}
+                                {/* 更新 Popup 顯示邏輯：如果有圖片則顯示圖片，否則顯示 emoji */}
+                                <div className="mb-6 animate-bounce-slow flex justify-center">
+                                    {activeAnimal.image ? (
+                                        <img src={activeAnimal.image} alt={activeAnimal.name} className="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-full shadow-xl border-4 border-white" />
+                                    ) : (
+                                        <span className="text-8xl sm:text-9xl">{activeAnimal.emoji}</span>
+                                    )}
                                 </div>
+
                                 <h4 className="text-2xl sm:text-3xl font-black text-slate-800 mb-4 tracking-tight">
                                     {activeAnimal.name}
                                 </h4>
