@@ -221,13 +221,12 @@
 
                     <div className="flex-1 min-h-0">
                       {!selectedTexture ? (
-                        /* 首頁 2x2 網格：加大間距 (gap-6 sm:gap-10) */
+                        /* 首頁 2x2 網格 */
                         <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-6 sm:gap-10 h-full animate-in fade-in slide-in-from-bottom-4">
                           {TEXTURES.map((t) => (
                             <button 
                               key={t.id} 
                               onClick={() => { setSelectedTexture(t); speak(t.name); }} 
-                              /* 調整內距與間距，保留大視覺但避免文字過於靠邊 */
                               className="relative bg-white border border-slate-100 rounded-[3rem] shadow-premium hover:shadow-2xl hover:-translate-y-1 transform transition-all duration-500 group overflow-hidden flex flex-row items-center justify-start gap-5 sm:gap-8 lg:gap-10 px-6 sm:px-10 lg:px-12"
                             >
                               <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-40 group-hover:opacity-60 transition-opacity`}></div>
@@ -235,7 +234,6 @@
 
                               <div className="relative flex-shrink-0">
                                 <div className={`absolute inset-0 rounded-full ring-4 ${t.ringColor} scale-110 opacity-50`}></div>
-                                {/* 調整圖片尺寸，為文字留出呼吸空間 */}
                                 <img 
                                   src={t.image} 
                                   alt={t.name} 
@@ -244,7 +242,6 @@
                               </div>
 
                               <div className="relative z-10 text-left flex-1 pr-4">
-                                {/* 根據螢幕寬度更細膩地調整字體大小，確保不會撞到右邊緣 */}
                                 <h3 className={`text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-black ${t.textColor} tracking-normal leading-tight`}>{t.name}</h3>
                                 <div className={`mt-2 flex items-center justify-start gap-2 text-xs sm:text-sm lg:text-base font-bold ${t.textColor} opacity-60 uppercase tracking-widest`}>
                                   Explore <ChevronRight size={16} />
@@ -285,12 +282,13 @@
 
                           {/* 右側：2x2 動物網格 */}
                           <div className="relative z-10 flex-1 overflow-y-auto custom-scroll p-6 sm:p-10 flex items-center justify-center">
-                            {/* 強制為 grid-cols-2 保證 2x2 排版，並將 max-w 縮小至 max-w-lg，讓圖示彼此靠攏集中 */}
-                            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full max-w-lg mx-auto">
+                            {/* 將 grid gap 縮小 (gap-3 sm:gap-4 lg:gap-6)，並縮小最大寬度 (max-w-md)，讓動物往中間靠攏 */}
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 w-full max-w-sm sm:max-w-md mx-auto">
                               {ANIMALS.filter(a => a.texture === selectedTexture.id).map(animal => (
                                 <div 
                                   key={animal.id} 
-                                  className="bg-white/60 backdrop-blur-sm p-6 sm:p-8 rounded-[2.5rem] border border-white hover:border-orange-200 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden" 
+                                  /* 稍微調小內部 padding，讓外觀更緊湊 */
+                                  className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-[2rem] border border-white hover:border-orange-200 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden" 
                                   onClick={() => {
                                       setActiveAnimal(animal);
                                       speak(animal.desc);
@@ -298,7 +296,7 @@
                                 >
                                   <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-orange-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                   
-                                  <div className="mb-4 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10 flex justify-center">
+                                  <div className="mb-3 sm:mb-4 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10 flex justify-center">
                                     {animal.image ? (
                                       <img src={animal.image} alt={animal.name} className="w-20 h-20 sm:w-28 sm:h-28 object-cover rounded-full shadow-md border-[4px] border-white" />
                                     ) : (
@@ -307,7 +305,7 @@
                                   </div>
 
                                   <div className="text-xl sm:text-2xl font-black text-slate-700 tracking-tighter relative z-10">{animal.name}</div>
-                                  <div className="mt-4 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center opacity-40 group-hover:opacity-100 group-hover:bg-orange-100 transition-all">
+                                  <div className="mt-3 sm:mt-4 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center opacity-40 group-hover:opacity-100 group-hover:bg-orange-100 transition-all">
                                     <Volume2 size={20} className="text-slate-400 group-hover:text-orange-600" />
                                   </div>
                                 </div>
@@ -342,38 +340,40 @@
                     </div>
                 )}
 
-                {/* 動物描述 Popup */}
+                {/* 動物描述 Popup - 放大整個框架與內部大圖 */}
                 {activeAnimal && (
                     <div 
                         className="fixed inset-0 z-[110] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 zoom-overlay"
                         onClick={() => setActiveAnimal(null)}
                     >
                         <div 
-                            className="bg-white w-full max-w-lg rounded-[3rem] p-8 sm:p-12 shadow-2xl border border-white relative animate-in zoom-in-95 duration-300"
+                            /* 將最大寬度從 max-w-lg 放大到 max-w-2xl，讓框變大 */
+                            className="bg-white w-full max-w-2xl rounded-[3rem] p-8 sm:p-12 lg:p-16 shadow-2xl border border-white relative animate-in zoom-in-95 duration-300"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button 
                                 onClick={() => setActiveAnimal(null)}
-                                className="absolute top-6 right-6 p-2 text-slate-300 hover:text-orange-500 transition-colors"
+                                className="absolute top-6 right-6 sm:top-8 sm:right-8 p-2 text-slate-300 hover:text-orange-500 transition-colors"
                             >
-                                <X size={32} />
+                                <X size={36} />
                             </button>
 
                             <div className="flex flex-col items-center text-center">
-                                <div className="mb-6 animate-bounce-slow flex justify-center">
+                                <div className="mb-6 sm:mb-8 animate-bounce-slow flex justify-center">
                                     {activeAnimal.image ? (
-                                        <img src={activeAnimal.image} alt={activeAnimal.name} className="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-full shadow-xl border-4 border-white" />
+                                        /* 顯著放大動物的圖片尺寸 */
+                                        <img src={activeAnimal.image} alt={activeAnimal.name} className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 object-cover rounded-full shadow-2xl border-[6px] border-white" />
                                     ) : (
-                                        <span className="text-8xl sm:text-9xl">{activeAnimal.emoji}</span>
+                                        <span className="text-[10rem] lg:text-[12rem]">{activeAnimal.emoji}</span>
                                     )}
                                 </div>
 
-                                <h4 className="text-2xl sm:text-3xl font-black text-slate-800 mb-4 tracking-tight">
+                                <h4 className="text-3xl sm:text-5xl font-black text-slate-800 mb-6 tracking-tight">
                                     {activeAnimal.name}
                                 </h4>
                                 
-                                <div className="bg-orange-50/50 p-6 sm:p-8 rounded-[2rem] border-2 border-orange-100/50 relative mb-8 w-full">
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 text-orange-400 text-xs font-black uppercase tracking-widest">
+                                <div className="bg-orange-50/50 p-6 sm:p-10 rounded-[2.5rem] border-2 border-orange-100/50 relative mb-8 w-full">
+                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-6 text-orange-400 text-sm font-black uppercase tracking-widest">
                                         Learning Sentence
                                     </div>
                                     {formatDescription(activeAnimal.desc)}
@@ -381,9 +381,9 @@
 
                                 <button 
                                     onClick={() => speak(activeAnimal.desc)}
-                                    className="flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black text-lg shadow-lg shadow-orange-200 active:scale-95 transition-all"
+                                    className="flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-lg shadow-orange-200 active:scale-95 transition-all"
                                 >
-                                    <Volume2 size={24} /> Listen Again
+                                    <Volume2 size={28} /> Listen Again
                                 </button>
                             </div>
                         </div>
