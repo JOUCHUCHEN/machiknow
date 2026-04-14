@@ -282,12 +282,11 @@
 
                           {/* 右側：2x2 動物網格 */}
                           <div className="relative z-10 flex-1 overflow-y-auto custom-scroll p-6 sm:p-10 flex items-center justify-center">
-                            {/* 將 grid gap 縮小 (gap-3 sm:gap-4 lg:gap-6)，並縮小最大寬度 (max-w-md)，讓動物往中間靠攏 */}
-                            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 w-full max-w-sm sm:max-w-md mx-auto">
+                            {/* 將 grid gap 再縮小 50% (gap-1.5 sm:gap-2 lg:gap-3)，讓動物進一步往中間靠攏 */}
+                            <div className="grid grid-cols-2 gap-1.5 sm:gap-2 lg:gap-3 w-full max-w-sm sm:max-w-md mx-auto">
                               {ANIMALS.filter(a => a.texture === selectedTexture.id).map(animal => (
                                 <div 
                                   key={animal.id} 
-                                  /* 稍微調小內部 padding，讓外觀更緊湊 */
                                   className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-[2rem] border border-white hover:border-orange-200 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden" 
                                   onClick={() => {
                                       setActiveAnimal(animal);
@@ -347,7 +346,6 @@
                         onClick={() => setActiveAnimal(null)}
                     >
                         <div 
-                            /* 將最大寬度從 max-w-lg 放大到 max-w-2xl，讓框變大 */
                             className="bg-white w-full max-w-2xl rounded-[3rem] p-8 sm:p-12 lg:p-16 shadow-2xl border border-white relative animate-in zoom-in-95 duration-300"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -361,7 +359,6 @@
                             <div className="flex flex-col items-center text-center">
                                 <div className="mb-6 sm:mb-8 animate-bounce-slow flex justify-center">
                                     {activeAnimal.image ? (
-                                        /* 顯著放大動物的圖片尺寸 */
                                         <img src={activeAnimal.image} alt={activeAnimal.name} className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 object-cover rounded-full shadow-2xl border-[6px] border-white" />
                                     ) : (
                                         <span className="text-[10rem] lg:text-[12rem]">{activeAnimal.emoji}</span>
