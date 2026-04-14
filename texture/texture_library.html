@@ -227,26 +227,25 @@
                             <button 
                               key={t.id} 
                               onClick={() => { setSelectedTexture(t); speak(t.name); }} 
-                              /* 加大內距 px-6 sm:px-12 lg:px-20 和 gap-6 sm:gap-12 */
-                              className="relative bg-white border border-slate-100 rounded-[3rem] shadow-premium hover:shadow-2xl hover:-translate-y-1 transform transition-all duration-500 group overflow-hidden flex flex-row items-center justify-start gap-6 sm:gap-12 px-6 sm:px-12 lg:px-20"
+                              /* 調整內距與間距，保留大視覺但避免文字過於靠邊 */
+                              className="relative bg-white border border-slate-100 rounded-[3rem] shadow-premium hover:shadow-2xl hover:-translate-y-1 transform transition-all duration-500 group overflow-hidden flex flex-row items-center justify-start gap-5 sm:gap-8 lg:gap-10 px-6 sm:px-10 lg:px-12"
                             >
                               <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-40 group-hover:opacity-60 transition-opacity`}></div>
                               <Sparkles className="absolute top-6 right-6 text-white/40 group-hover:text-white/80 transition-colors" size={28} />
 
                               <div className="relative flex-shrink-0">
                                 <div className={`absolute inset-0 rounded-full ring-4 ${t.ringColor} scale-110 opacity-50`}></div>
-                                {/* 顯著放大圖片尺寸 (lg:w-44 lg:h-44) */}
+                                {/* 調整圖片尺寸，為文字留出呼吸空間 */}
                                 <img 
                                   src={t.image} 
                                   alt={t.name} 
-                                  className="w-24 h-24 sm:w-36 sm:h-36 lg:w-44 lg:h-44 object-cover rounded-full shadow-lg border-[6px] border-white relative z-10 group-hover:scale-105 transition-transform duration-500"
+                                  className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 object-cover rounded-full shadow-lg border-[6px] border-white relative z-10 group-hover:scale-105 transition-transform duration-500"
                                 />
                               </div>
 
-                              <div className="relative z-10 text-left">
-                                {/* 放大標題文字 (lg:text-6xl) */}
-                                <h3 className={`text-4xl sm:text-5xl lg:text-6xl font-black ${t.textColor} tracking-normal leading-tight`}>{t.name}</h3>
-                                {/* 放大 Explore 文字 (lg:text-base) */}
+                              <div className="relative z-10 text-left flex-1 pr-4">
+                                {/* 根據螢幕寬度更細膩地調整字體大小，確保不會撞到右邊緣 */}
+                                <h3 className={`text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-black ${t.textColor} tracking-normal leading-tight`}>{t.name}</h3>
                                 <div className={`mt-2 flex items-center justify-start gap-2 text-xs sm:text-sm lg:text-base font-bold ${t.textColor} opacity-60 uppercase tracking-widest`}>
                                   Explore <ChevronRight size={16} />
                                 </div>
