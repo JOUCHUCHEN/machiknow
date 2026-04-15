@@ -116,7 +116,7 @@
           { id: 'snake', name: 'Snake', texture: 'scales', emoji: '🐍', desc: 'Snakes have dry and hard scales.' }, 
           { id: 'fish', name: 'Fish', texture: 'scales', emoji: '🐟', desc: 'Fish have shiny and wet scales.' }, 
           { id: 'crocodile', name: 'Crocodile', texture: 'scales', emoji: '🐊', image: 'https://i.ibb.co/Ng3L4Xw2/miniformat65-nile-crocodile-245013-1920.jpg', desc: 'Crocodiles have very hard scales.' },
-          { id: 'lizard', name: 'Lizard', texture: 'scales', emoji: '🦎', image: 'https://i.ibb.co/SwT4hFnB/pavanprasad-ind-lizard-9076520-1920.jpg', desc: 'Lizards have small and dry scales.' },
+          { id: 'lizard', name: 'Lizard', texture: 'scales', emoji: '🦎', image: 'https://i.ibb.co/SwT4hFnB/pavanprasad-ind-lizard-9076520-1920.jpg', zoomClass: 'scale-[2.5] object-[center_40%]', desc: 'Lizards have small and dry scales.' },
           { id: 'eagle', name: 'Eagle', texture: 'feathers', emoji: '🦅', image: 'https://i.ibb.co/5gVzdnGc/stacyvitallo-eagle-1029909-1920.jpg', desc: 'Eagles have strong feathers for flying.' }, 
           { id: 'crow', name: 'Crow', texture: 'feathers', emoji: '🐦‍⬛', image: 'https://i.ibb.co/kgBKWdwG/chiemseherin-raven-bird-3696515-1920.jpg', desc: 'Crows have black and shiny feathers.' }, 
           { id: 'parrot', name: 'Parrot', texture: 'feathers', emoji: '🦜', image: 'https://i.ibb.co/v4SmBfMV/beckytregear-bird-4728857-1920.jpg', desc: 'Parrots have colorful feathers.' },
@@ -293,35 +293,33 @@
 
                           {/* 右側：2x2 動物網格 */}
                           <div className="relative z-10 flex-1 overflow-y-auto custom-scroll p-4 lg:p-6 flex items-center justify-center">
-                            {/* 極度縮小 max-w 與 gap，讓卡片無縫般靠攏 */}
-                            <div className="grid grid-cols-2 gap-1 lg:gap-1.5 w-full max-w-[12rem] sm:max-w-[15rem] lg:max-w-[17rem] mx-auto">
+                            {/* 調整 max-w 配合放大的圖片，並保持緊密的 gap */}
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full max-w-[15rem] sm:max-w-[20rem] lg:max-w-[22rem] mx-auto">
                               {ANIMALS.filter(a => a.texture === selectedTexture.id).map(animal => (
                                 <div 
                                   key={animal.id} 
-                                  /* 再次縮小 Padding (p-3 lg:p-4)，並調整圓角 */
-                                  className="bg-white/60 backdrop-blur-sm p-3 lg:p-4 rounded-[1.2rem] sm:rounded-[1.5rem] border border-white hover:border-orange-200 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center group relative overflow-hidden" 
+                                  /* 調整 Padding，讓內部空間緊湊、圖片更大 */
+                                  className="bg-white/60 backdrop-blur-sm p-4 lg:p-6 rounded-[1.5rem] border border-white hover:border-orange-200 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center group relative overflow-hidden" 
                                   onClick={() => {
                                       setActiveAnimal(animal);
-                                      speak(animal.desc);
+                                      speak(animal.name); // 點擊卡片時，只朗讀動物名稱
                                   }}
                                 >
                                   <div className="absolute -right-4 -bottom-4 w-12 h-12 bg-orange-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                   
-                                  {/* 調整圖片與文字之間的間距 (mb-1 sm:mb-2) */}
-                                  <div className="mb-1 sm:mb-2 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10 flex justify-center">
+                                  {/* 大幅放大圖片尺寸 (w-20 -> w-32) */}
+                                  <div className="mb-2 sm:mb-3 transform group-hover:scale-110 group-hover:rotate-6 transition-transform relative z-10 flex justify-center">
                                     {animal.image ? (
-                                      <img src={animal.image} alt={animal.name} className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 object-cover rounded-full shadow-md border-[3px] border-white" />
+                                      <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full shadow-md border-[4px] border-white overflow-hidden">
+                                        <img src={animal.image} alt={animal.name} className={`w-full h-full object-cover transition-transform ${animal.zoomClass || ''}`} />
+                                      </div>
                                     ) : (
-                                      <span className="text-4xl sm:text-5xl lg:text-6xl">{animal.emoji}</span>
+                                      <span className="text-5xl sm:text-6xl lg:text-7xl">{animal.emoji}</span>
                                     )}
                                   </div>
 
-                                  <div className="text-base sm:text-lg lg:text-xl font-black text-slate-700 tracking-tighter relative z-10 leading-none">{animal.name}</div>
-                                  
-                                  {/* 減少 margin-top (mt-1) 讓喇叭標誌往上靠近文字，並調整喇叭標誌尺寸 */}
-                                  <div className="mt-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-40 group-hover:opacity-100 group-hover:bg-orange-100 transition-all relative z-10">
-                                    <Volume2 size={14} className="text-slate-400 group-hover:text-orange-600 sm:w-4 sm:h-4" />
-                                  </div>
+                                  {/* 移除原本的喇叭圖示，並為文字加上微小的底部 padding 以平衡視覺 */}
+                                  <div className="text-lg sm:text-xl lg:text-2xl font-black text-slate-700 tracking-tighter relative z-10 leading-none pb-1 sm:pb-2">{animal.name}</div>
                                 </div>
                               ))}
                             </div>
@@ -374,23 +372,39 @@
                             <div className="flex flex-col items-center text-center">
                                 <div className="mb-6 sm:mb-8 animate-bounce-slow flex justify-center">
                                     {activeAnimal.image ? (
-                                        <img src={activeAnimal.image} alt={activeAnimal.name} className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 object-cover rounded-full shadow-2xl border-[6px] border-white" />
+                                        <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full shadow-2xl border-[6px] border-white overflow-hidden">
+                                            <img src={activeAnimal.image} alt={activeAnimal.name} className={`w-full h-full object-cover ${activeAnimal.zoomClass || ''}`} />
+                                        </div>
                                     ) : (
                                         <span className="text-[10rem] lg:text-[12rem]">{activeAnimal.emoji}</span>
                                     )}
                                 </div>
 
-                                <h4 className="text-3xl sm:text-5xl font-black text-slate-800 mb-6 tracking-tight">
-                                    {activeAnimal.name}
-                                </h4>
+                                {/* 點擊動物名稱朗讀單字 */}
+                                <div className="flex items-center justify-center gap-4 mb-6">
+                                    <h4 className="text-3xl sm:text-5xl font-black text-slate-800 tracking-tight cursor-pointer hover:text-orange-500 transition-colors" onClick={() => speak(activeAnimal.name)}>
+                                        {activeAnimal.name}
+                                    </h4>
+                                    <button 
+                                      onClick={() => speak(activeAnimal.name)}
+                                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all text-slate-500 hover:text-orange-600 active:scale-95"
+                                    >
+                                      <Volume2 size={24} />
+                                    </button>
+                                </div>
                                 
-                                <div className="bg-orange-50/50 p-6 sm:p-10 rounded-[2.5rem] border-2 border-orange-100/50 relative mb-8 w-full">
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-6 text-orange-400 text-sm font-black uppercase tracking-widest">
-                                        Learning Sentence
+                                {/* 點擊特徵描述朗讀句子 */}
+                                <div 
+                                    className="bg-orange-50/50 p-6 sm:p-10 rounded-[2.5rem] border-2 border-orange-100/50 relative mb-8 w-full cursor-pointer hover:bg-orange-100/50 transition-colors group"
+                                    onClick={() => speak(activeAnimal.desc)}
+                                >
+                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-6 text-orange-400 text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                        Learning Sentence <Volume2 size={16} className="text-orange-400 group-hover:scale-110 transition-transform" />
                                     </div>
                                     {formatDescription(activeAnimal.desc)}
                                 </div>
 
+                                {/* 按鈕朗讀句子 */}
                                 <button 
                                     onClick={() => speak(activeAnimal.desc)}
                                     className="flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-lg shadow-orange-200 active:scale-95 transition-all"
