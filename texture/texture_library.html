@@ -115,7 +115,7 @@
         const ANIMALS = [
           { id: 'snake', name: 'Snake', texture: 'scales', emoji: '🐍', desc: 'Snakes have dry and hard scales.' }, 
           { id: 'fish', name: 'Fish', texture: 'scales', emoji: '🐟', desc: 'Fish have shiny and wet scales.' }, 
-          { id: 'crocodile', name: 'Crocodile', texture: 'scales', emoji: '🐊', image: 'https://i.ibb.co/39VRLgmj/miniformat65-nile-crocodile-245013-640.jpg', desc: 'Crocodiles have very hard scales.' },
+          { id: 'crocodile', name: 'Crocodile', texture: 'scales', emoji: '🐊', image: 'https://i.ibb.co/Ng3L4Xw2/miniformat65-nile-crocodile-245013-1920.jpg', desc: 'Crocodiles have very hard scales.' },
           { id: 'lizard', name: 'Lizard', texture: 'scales', emoji: '🦎', image: 'https://i.ibb.co/SwT4hFnB/pavanprasad-ind-lizard-9076520-1920.jpg', desc: 'Lizards have small and dry scales.' },
           { id: 'eagle', name: 'Eagle', texture: 'feathers', emoji: '🦅', image: 'https://i.ibb.co/5gVzdnGc/stacyvitallo-eagle-1029909-1920.jpg', desc: 'Eagles have strong feathers for flying.' }, 
           { id: 'crow', name: 'Crow', texture: 'feathers', emoji: '🐦‍⬛', image: 'https://i.ibb.co/kgBKWdwG/chiemseherin-raven-bird-3696515-1920.jpg', desc: 'Crows have black and shiny feathers.' }, 
@@ -136,7 +136,7 @@
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
-            utterance.rate = 0.7; // 將語速調整為 0.7
+            utterance.rate = 0.8; // 將語速調回 0.8
             window.speechSynthesis.speak(utterance);
           }
         };
