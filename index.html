@@ -16,6 +16,10 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    screens: {
+                        '3xl': '1920px',
+                        '4xl': '2560px',
+                    },
                     fontFamily: {
                         sans: ['"Roboto"', 'sans-serif'],
                         brand: ['"Noto Sans TC"', 'sans-serif'],
@@ -61,6 +65,9 @@
         import { createRoot } from 'react-dom/client';
         import { Menu, LayoutGrid, Rocket, ChevronRight, Youtube, PlayCircle, Gamepad2, Wrench } from 'lucide-react';
 
+        // --- 共通的自適應容器 ---
+        const containerClasses = "w-full max-w-7xl 2xl:max-w-[1536px] 3xl:max-w-[1920px] 4xl:max-w-[2800px] mx-auto px-4 md:px-6 3xl:px-12";
+
         // --- STEM 課程資料 (已重新排序) ---
         const stemProjects = [
             { id: 'p2', title: 'Bow & Arrow', link: './steam_bow&arrow.html', cover: 'https://i.ibb.co/bjhp6x9d/image.png', desc: 'Mechanical structure & logic', tags: ['SPM', 'Basic']},
@@ -105,16 +112,16 @@
                     {stemProjects.map((project, index) => {
                         const themeClass = themes[index % 4];
                         return (
-                            <a key={project.id} href={project.link || `./stem_l1_u1_${project.id}.html`} target="_blank" rel="noopener noreferrer" className={`bg-gradient-to-br ${themeClass} rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-xl min-h-[16.5rem]`}>
-                                <div className="w-full h-36 rounded-2xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
-                                    {project.cover ? <img src={project.cover} className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500" /> : <span className="text-[6rem]">⚙️</span>}
+                            <a key={project.id} href={project.link || `./stem_l1_u1_${project.id}.html`} target="_blank" rel="noopener noreferrer" className={`bg-gradient-to-br ${themeClass} rounded-[2.5rem] 3xl:rounded-[3.5rem] p-6 3xl:p-10 4xl:p-14 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col group shadow-xl min-h-[16.5rem] 3xl:min-h-[24rem] 4xl:min-h-[34rem]`}>
+                                <div className="w-full h-36 3xl:h-48 4xl:h-72 rounded-2xl 3xl:rounded-3xl overflow-hidden mb-4 3xl:mb-8 bg-white/10 flex items-center justify-center relative">
+                                    {project.cover ? <img src={project.cover} className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500" /> : <span className="text-[6rem] 3xl:text-[8rem] 4xl:text-[12rem]">⚙️</span>}
                                 </div>
                                 <div className="relative z-10 flex-1 flex flex-col">
-                                    <h3 className="text-lg font-black mb-1 drop-shadow-md leading-tight">{project.title}</h3>
-                                    <p className="text-white/80 text-xs font-medium line-clamp-2 mb-2 opacity-90">{project.desc}</p>
-                                    <div className="mt-auto flex flex-wrap gap-2">
+                                    <h3 className="text-lg 3xl:text-3xl 4xl:text-5xl font-black mb-1 3xl:mb-3 drop-shadow-md leading-tight">{project.title}</h3>
+                                    <p className="text-white/80 text-xs 3xl:text-lg 4xl:text-3xl font-medium line-clamp-2 mb-2 3xl:mb-4 opacity-90">{project.desc}</p>
+                                    <div className="mt-auto flex flex-wrap gap-2 3xl:gap-3 4xl:gap-4">
                                         {project.tags.map((tag) => (
-                                            <div key={tag} className="flex items-center text-[10px] font-black uppercase tracking-widest bg-black/30 w-fit px-2.5 py-1 rounded-lg backdrop-blur-md">
+                                            <div key={tag} className="flex items-center text-[10px] 3xl:text-sm 4xl:text-2xl font-black uppercase tracking-widest bg-black/30 w-fit px-2.5 py-1 3xl:px-4 3xl:py-2 4xl:px-6 4xl:py-3 rounded-lg 3xl:rounded-xl backdrop-blur-md">
                                                 <span className={tag === 'SPM' ? 'text-yellow-300' : 'text-cyan-300'}>{tag}</span>
                                             </div>
                                         ))}
@@ -137,7 +144,7 @@
 
           const Navbar = () => (
             <nav className="bg-white shadow-sm h-20 border-b flex-shrink-0 z-50 sticky top-0">
-              <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+              <div className={`${containerClasses} h-full flex justify-between items-center`}>
                 <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('top')}>
                   <img 
                     src="https://i.ibb.co/CFC5v9L/Machi-Know-Logo.png" 
@@ -162,92 +169,117 @@
             <div className="min-h-screen bg-gray-50 flex flex-col h-screen overflow-hidden">
               <Navbar />
               <div className="flex-1 overflow-y-auto custom-scroll">
-                <div id="top" className="max-w-7xl mx-auto px-4 pt-4">
-                  <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg overflow-hidden w-full h-20 my-2">
-                    <span className="absolute top-1 right-2 text-[10px] bg-gray-200 text-gray-500 px-1 rounded uppercase font-bold">AD Space</span>
-                    <p className="font-semibold text-xs">728 x 90</p>
+                <div id="top" className={`${containerClasses} pt-4`}>
+                  <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg overflow-hidden w-full h-20 3xl:h-32 4xl:h-48 my-2 3xl:my-4">
+                    <span className="absolute top-1 3xl:top-2 right-2 3xl:right-4 text-[10px] 3xl:text-sm 4xl:text-2xl bg-gray-200 text-gray-500 px-1 3xl:px-3 3xl:py-1 rounded uppercase font-bold">AD Space</span>
+                    <p className="font-semibold text-xs 3xl:text-xl 4xl:text-4xl">728 x 90</p>
                   </div>
                 </div>
                 
-                <header className="max-w-7xl mx-auto px-4 py-6 text-center">
-                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight">Creative Resource Hub</h1>
-                  <p className="text-gray-500 text-base md:text-lg font-bold max-w-3xl mx-auto opacity-80">Providing free, professional English and STEAM teaching resources for educators worldwide.</p>
+                <header className={`${containerClasses} py-6 3xl:py-16 4xl:py-24 text-center`}>
+                  <h1 className="text-3xl md:text-5xl 3xl:text-7xl 4xl:text-9xl font-black text-gray-900 mb-3 3xl:mb-8 tracking-tight">Creative Resource Hub</h1>
+                  <p className="text-gray-500 text-base md:text-lg 3xl:text-3xl 4xl:text-5xl font-bold max-w-3xl 3xl:max-w-5xl 4xl:max-w-[120rem] mx-auto opacity-80">Providing free, professional English and STEAM teaching resources for educators worldwide.</p>
                 </header>
 
-                <main className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-10">
-                  <div className="lg:w-4/5">
+                <main className={`${containerClasses} py-6 3xl:py-10 flex flex-col lg:flex-row gap-10 3xl:gap-16 4xl:gap-24`}>
+                  <div className="lg:w-4/5 w-full">
+                    
                     {/* ENGLISH Section */}
-                    <section id="elementary" className="mb-14">
-                      <div className="flex items-center mb-6"><LayoutGrid className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Elementary English</h2></div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <section id="elementary" className="mb-14 3xl:mb-24 4xl:mb-36">
+                      <div className="flex items-center mb-6 3xl:mb-12"><LayoutGrid className="text-orange-600 mr-4 3xl:w-10 3xl:h-10 4xl:w-16 4xl:h-16" size={28} /><h2 className="text-2xl 3xl:text-4xl 4xl:text-6xl font-black text-gray-900 uppercase tracking-tight">Elementary English</h2></div>
+                      
+                      {/* 依據圖片改為大卡片並排佈局 */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 3xl:gap-10 4xl:gap-16">
+                        
                         {/* Amazing Animals */}
-                        <a href="./english_animals.html" target="_blank" className="bg-gradient-to-br from-orange-400 to-amber-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
-                          <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🦁</span></div>
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🐾 Amazing Animals</h3><p className="text-orange-50 text-xs opacity-90 font-bold">Interactive audio games & fun TPR activities</p></div>
+                        <a href="./english_animals.html" target="_blank" className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-[2.5rem] 3xl:rounded-[3.5rem] 4xl:rounded-[4.5rem] p-8 pt-10 sm:pt-12 3xl:p-12 3xl:pt-20 4xl:p-16 4xl:pt-28 text-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-start group shadow-xl min-h-[14rem] 3xl:min-h-[22rem] 4xl:min-h-[32rem]">
+                          <div className="absolute -right-4 -bottom-6 opacity-[0.12] transition-transform duration-700 group-hover:scale-110">
+                              <span className="text-[12rem] 3xl:text-[20rem] 4xl:text-[30rem] leading-none">🦁</span>
+                          </div>
+                          <div className="relative z-10">
+                              <h3 className="text-3xl sm:text-4xl 3xl:text-6xl 4xl:text-8xl font-black mb-2 3xl:mb-6 drop-shadow-md flex items-center gap-3">
+                                  <span className="text-3xl sm:text-4xl 3xl:text-6xl 4xl:text-8xl">🐾</span> Amazing Animals
+                              </h3>
+                              <p className="text-orange-50 text-base sm:text-lg 3xl:text-2xl 4xl:text-5xl opacity-95 font-bold drop-shadow-sm">Interactive audio games & fun TPR activities</p>
+                          </div>
                         </a>
 
                         {/* Animal Texture */}
-                        <a href="./english_texture.html" target="_blank" className="bg-gradient-to-br from-emerald-400 to-teal-800 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all relative overflow-hidden flex flex-col justify-between group shadow-lg min-h-[11rem]">
-                          <div className="absolute right-2 bottom-2 opacity-20"><span className="text-[5rem]">🐍</span></div>
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 drop-shadow-md">🌿 Animal Texture</h3><p className="text-emerald-50 text-xs opacity-90 font-bold">Touch and learn: Fur, Scales, and Feathers</p></div>
+                        <a href="./english_texture.html" target="_blank" className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[2.5rem] 3xl:rounded-[3.5rem] 4xl:rounded-[4.5rem] p-8 pt-10 sm:pt-12 3xl:p-12 3xl:pt-20 4xl:p-16 4xl:pt-28 text-white cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-start group shadow-xl min-h-[14rem] 3xl:min-h-[22rem] 4xl:min-h-[32rem]">
+                          <div className="absolute -right-4 -bottom-6 opacity-[0.12] transition-transform duration-700 group-hover:scale-110">
+                              <span className="text-[12rem] 3xl:text-[20rem] 4xl:text-[30rem] leading-none">🐍</span>
+                          </div>
+                          <div className="relative z-10">
+                              <h3 className="text-3xl sm:text-4xl 3xl:text-6xl 4xl:text-8xl font-black mb-2 3xl:mb-6 drop-shadow-md flex items-center gap-3">
+                                  <span className="text-3xl sm:text-4xl 3xl:text-6xl 4xl:text-8xl">🌿</span> Animal Texture
+                              </h3>
+                              <p className="text-emerald-50 text-base sm:text-lg 3xl:text-2xl 4xl:text-5xl opacity-95 font-bold drop-shadow-sm">Touch and learn: Fur, Scales, and Feathers</p>
+                          </div>
                         </a>
+
                       </div>
                     </section>
 
                     {/* Bricks & Robotics Section */}
-                    <section id="steam" className="mb-14">
-                      <div className="flex items-center mb-6"><Rocket className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Bricks & Robotics</h2></div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"><StemProjectsGrid /></div>
+                    <section id="steam" className="mb-14 3xl:mb-24 4xl:mb-36">
+                      <div className="flex items-center mb-6 3xl:mb-12"><Rocket className="text-orange-600 mr-4 3xl:w-10 3xl:h-10 4xl:w-16 4xl:h-16" size={28} /><h2 className="text-2xl 3xl:text-4xl 4xl:text-6xl font-black text-gray-900 uppercase tracking-tight">Bricks & Robotics</h2></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-5 3xl:gap-8 4xl:gap-12"><StemProjectsGrid /></div>
                     </section>
 
                     {/* Scratch Interactive Section */}
-                    <section id="scratch" className="mb-14">
-                      <div className="flex items-center mb-6"><Gamepad2 className="text-orange-600 mr-4" size={28} /><h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Scratch Interactive</h2></div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                        <a href="./scratch_cat_match.html" target="_blank" className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🐾 貓翻翻樂 (English)</h3><p className="text-yellow-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                    <section id="scratch" className="mb-14 3xl:mb-24 4xl:mb-36">
+                      <div className="flex items-center mb-6 3xl:mb-12"><Gamepad2 className="text-orange-600 mr-4 3xl:w-10 3xl:h-10 4xl:w-16 4xl:h-16" size={28} /><h2 className="text-2xl 3xl:text-4xl 4xl:text-6xl font-black text-gray-900 uppercase tracking-tight">Scratch Interactive</h2></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-8 gap-5 3xl:gap-8 4xl:gap-12">
+                        
+                        <a href="./scratch_cat_match.html" target="_blank" className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[2.5rem] 3xl:rounded-[3.5rem] p-6 3xl:p-10 4xl:p-14 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl 3xl:text-3xl 4xl:text-4xl font-black mb-1 leading-tight">🐾 貓翻翻樂 (English)</h3><p className="text-yellow-50 text-sm 3xl:text-lg 4xl:text-2xl font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
-                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">🐱</span>
+                             <span className="text-[6.5rem] 3xl:text-[10rem] 4xl:text-[14rem] opacity-30 group-hover:opacity-60">🐱</span>
                           </div>
                         </a>
                         
-                        <a href="./scratch_time_travel.html" target="_blank" className="bg-gradient-to-br from-violet-500 to-fuchsia-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">What time is it?</h3><p className="text-violet-50 text-sm font-bold opacity-90 mt-1">Time Expressions Game</p></div>
+                        <a href="./scratch_time_travel.html" target="_blank" className="bg-gradient-to-br from-violet-500 to-fuchsia-700 rounded-[2.5rem] 3xl:rounded-[3.5rem] p-6 3xl:p-10 4xl:p-14 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl 3xl:text-3xl 4xl:text-4xl font-black mb-1 leading-tight">What time is it?</h3><p className="text-violet-50 text-sm 3xl:text-lg 4xl:text-2xl font-bold opacity-90 mt-1">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transition-all transform group-hover:scale-105 duration-700">
-                            <div className="bg-gray-900 p-1.5 rounded-[1.8rem] shadow-2xl border border-gray-700/50 ring-1 ring-white/10">
-                                <div className="rounded-[1.2rem] overflow-hidden bg-black flex items-center justify-center w-40 h-24">
+                            <div className="bg-gray-900 p-1.5 3xl:p-2.5 rounded-[1.8rem] 3xl:rounded-[2.5rem] shadow-2xl border border-gray-700/50 ring-1 ring-white/10">
+                                <div className="rounded-[1.2rem] 3xl:rounded-[2rem] overflow-hidden bg-black flex items-center justify-center w-40 h-24 3xl:w-64 3xl:h-40 4xl:w-80 4xl:h-52">
                                     <img src="https://i.ibb.co/G43S36BY/time-cover.png" className="w-full h-full object-contain" />
                                 </div>
                             </div>
                           </div>
                         </a>
 
-                        <a href="./scratch_whack_monster.html" target="_blank" className="bg-gradient-to-br from-rose-500 to-red-700 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">🔨 拍拍打怪獸 (English)</h3><p className="text-rose-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                        <a href="./scratch_whack_monster.html" target="_blank" className="bg-gradient-to-br from-rose-500 to-red-700 rounded-[2.5rem] 3xl:rounded-[3.5rem] p-6 3xl:p-10 4xl:p-14 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl 3xl:text-3xl 4xl:text-4xl font-black mb-1 leading-tight">🔨 拍拍打怪獸 (English)</h3><p className="text-rose-50 text-sm 3xl:text-lg 4xl:text-2xl font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
-                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">👾</span>
+                             <span className="text-[6.5rem] 3xl:text-[10rem] 4xl:text-[14rem] opacity-30 group-hover:opacity-60">👾</span>
                           </div>
                         </a>
 
-                        <a href="./scratch_what_are_you_doing.html" target="_blank" className="bg-gradient-to-br from-blue-400 to-cyan-600 rounded-[2.5rem] p-6 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
-                          <div className="relative z-10"><h3 className="text-xl font-black mb-1 leading-tight">💬 What are you doing?</h3><p className="text-blue-50 text-sm font-bold opacity-90">Time Expressions Game</p></div>
+                        <a href="./scratch_what_are_you_doing.html" target="_blank" className="bg-gradient-to-br from-blue-400 to-cyan-600 rounded-[2.5rem] 3xl:rounded-[3.5rem] p-6 3xl:p-10 4xl:p-14 text-white cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all aspect-square relative overflow-hidden flex flex-col justify-between group shadow-lg">
+                          <div className="relative z-10"><h3 className="text-xl 3xl:text-3xl 4xl:text-4xl font-black mb-1 leading-tight">💬 What are you doing?</h3><p className="text-blue-50 text-sm 3xl:text-lg 4xl:text-2xl font-bold opacity-90">Time Expressions Game</p></div>
                           <div className="mb-0 flex justify-center transform group-hover:scale-110 transition-transform duration-500">
-                             <span className="text-[6.5rem] opacity-30 group-hover:opacity-60">跑</span>
+                             <span className="text-[6.5rem] 3xl:text-[10rem] 4xl:text-[14rem] opacity-30 group-hover:opacity-60">跑</span>
                           </div>
                         </a>
+
                       </div>
                     </section>
                   </div>
 
-                  <aside className="lg:w-1/5">
-                    <div className="sticky top-24 flex flex-col gap-4">
-                      <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg w-full aspect-square max-h-[250px]"><span className="absolute top-1 right-2 text-[10px] font-bold">AD Space</span><p className="font-semibold text-xs">300 x 250</p></div>
+                  <aside className="w-full lg:w-1/5 xl:w-[300px] 3xl:w-[450px] 4xl:w-[600px] shrink-0">
+                    <div className="sticky top-24 3xl:top-32 flex flex-col gap-4 3xl:gap-8">
+                      <div className="relative flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 rounded-lg w-full aspect-square max-h-[250px] 3xl:max-h-[400px] 4xl:max-h-[500px]">
+                        <span className="absolute top-1 3xl:top-2 right-2 3xl:right-4 text-[10px] 3xl:text-sm 4xl:text-xl font-bold">AD Space</span>
+                        <p className="font-semibold text-xs 3xl:text-xl 4xl:text-4xl">300 x 250</p>
+                      </div>
                     </div>
                   </aside>
+
                 </main>
 
                 <footer className="bg-gray-900 text-white py-20 text-center mt-12">
-                  <div className="max-w-7xl mx-auto px-4">
+                  <div className={containerClasses}>
                     <div className="mb-10 text-3xl font-brand tracking-tighter uppercase">MaachiiKnow</div>
                     <div className="pt-10 border-t border-gray-800 text-gray-600 text-[9px] font-black tracking-[0.5em] uppercase">© 2026 MaachiiKnow. All rights reserved.</div>
                   </div>
